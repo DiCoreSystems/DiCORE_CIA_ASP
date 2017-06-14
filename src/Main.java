@@ -1,0 +1,48 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by CSZ on 30.05.2017.
+ */
+public class Main {
+
+    // 2 arguments planned:
+    // 1. A file with contains all information about the graph.
+    // 2. a destination path for the generated ASP program (can be omitted)
+    public static void main(String[] args){
+        // TODO: Need vertex and edge class
+        // vertex: ID.
+        // edge: ID.
+        List<Fluent> fluents = new ArrayList<>();
+        List<Action> actions = new ArrayList<>();
+        List<State> states = new ArrayList<>();
+
+        //Step 1: Determine all our fluents. Save their positive versions in a list.
+        Fluent type = new Fluent("type", true);
+        Fluent negType = new Fluent("type", false);
+        fluents.add(type);
+        Fluent geo = new Fluent("geo", true);
+        Fluent negGeo = new Fluent("geo", false);
+        fluents.add(geo);
+        Fluent pol = new Fluent("pol", true);
+        Fluent negPol = new Fluent("pol", false);
+        fluents.add(pol);
+
+        State start = new State(type, negGeo, negPol);
+        states.add(start);
+        State geoMap = new State(type, geo, negPol);
+        states.add(geoMap);
+        State polMap = new State(type, negGeo, pol);
+        states.add(polMap);
+
+        Action getGeoMap = new Action(start, geoMap, "getGeoMap");
+        actions.add(getGeoMap);
+        Action getPollutionMap = new Action(start, polMap, "getPollutionMap");
+        actions.add(getPollutionMap);
+
+        TransitionDiagram t = new TransitionDiagram(fluents, actions, states);
+
+        t.createASPCode();
+    }
+}
