@@ -5,6 +5,10 @@ public class Fluent {
     private String name;
     private boolean value;
 
+    // Fluents need to be declared by their positive values.
+    // The negative version of a fluent is defined straight afterwards
+    // by the constructor. (to be done)
+
     public Fluent(String name){
         this.name = name;
         this.value = true;

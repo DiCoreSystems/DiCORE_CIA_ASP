@@ -7,14 +7,9 @@ import java.util.List;
  */
 public class Main {
 
-    // 2 arguments planned:
-    // 1. A file with contains all information about the graph.
-    // 2. a destination path for the generated ASP program (can be omitted)
     public static void main(String[] args){
-        // TODO: Need vertex and edge class
-        // vertex: ID.
-        // edge: ID.
-        List<Fluent> fluents = new ArrayList<>();
+
+/*        List<Fluent> fluents = new ArrayList<>();
         List<Action> actions = new ArrayList<>();
         List<State> states = new ArrayList<>();
 
@@ -43,6 +38,6 @@ public class Main {
 
         TransitionDiagram t = new TransitionDiagram(fluents, actions, states);
 
-        t.createASPCode();
+        t.createASPCode(); */
     }
 }

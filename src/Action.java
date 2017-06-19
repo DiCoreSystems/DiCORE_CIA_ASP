@@ -1,7 +1,7 @@
 /**
  * Created by CSZ on 30.05.2017.
  */
-public class Action extends Edge{
+public class Action{
     private State startState;
     private State endState;
     private String name;
