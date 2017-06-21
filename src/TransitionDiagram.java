@@ -38,22 +38,51 @@ public class TransitionDiagram {
 
         try {
             FileWriter w = new FileWriter(f);
-            // Step 1: Define all fluents.
+            // Step 1: DEFINITION OF FLUENTS
             // For this example graph I'm treating all fluents as inertial
             // It may be necessary to check if a fluent is really inertial or not.
             for(Fluent fluent: fluents){
-                w.write("fluent(inertial," + fluent.getName() + ").\n");
+                if(fluent.isInertial()){
+                    w.write("fluent(inertial," + fluent.getName() + ").\n");
+                } else {
+                    w.write("fluent(defined," + fluent.getName() + ").\n");
+                }
             }
 
             w.write("\n");
 
-            // Step 2: Define all actions.
+            // DEFINITION OF ACTIONS.
             for(Action a: actions){
                 a.getStartState().getActions().add(a);
                 w.write("action(" + a.getName() +").\n");
             }
 
             w.write("\n");
+
+            // CWA AND INERTIA AXIOM FOR FLUENTS
+            for(Fluent fluent: fluents){
+                if(fluent.isInertial()){
+                    w.write("holds(" + fluent.getName() + ",i+1) :- " +
+                            "fluent(inertial," + fluent.getName() + "), " +
+                            "holds(" + fluent.getName() + ",i)," +
+                            "not -holds(" + fluent.getName() + ",i+1), i < n.");
+
+                    w.write("-holds(" + fluent.getName() + ",i+1) :- " +
+                            "fluent(inertial," + fluent.getName() + "), " +
+                            "-holds(" + fluent.getName() + ",i)," +
+                            "not holds(" + fluent.getName() + ",i+1), i < n.");
+                } else {
+                    w.write("-holds(" + fluent.getName() + ",i+1) :- " +
+                            "fluent(defined," + fluent.getName() + "), " +
+                            "not holds(" + fluent.getName() + ",i).");
+                }
+            }
+
+            // CWA FOR ACTIONS
+            for(Action a: actions){
+                w.write("-occurs(" + a.getName() +",I) :-" +
+                        " not occurs(" + a.getName() + ",I).");
+            }
 
             // Step 3: Get all Fluents from all starting states
             // and define their holds-Attribute for timestamp 0.
@@ -65,8 +94,7 @@ public class TransitionDiagram {
 
             w.write("\n");
 
-            // Step 4: Detect all changes caused by actions and define
-            // the holds-attribute of the changed fluent for timestamp t+1.
+            // CAUSAL LAW DEFINITION
             for(Action a: actions){
                 State s1 = a.getStartState();
                 State s2 = a.getEndState();

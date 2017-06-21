@@ -15,13 +15,10 @@ public class Main {
 
         //Step 1: Determine all our fluents. Save their positive versions in a list.
         Fluent type = new Fluent("type", true);
-        Fluent negType = new Fluent("type", false);
         fluents.add(type);
         Fluent geo = new Fluent("geo", true);
-        Fluent negGeo = new Fluent("geo", false);
         fluents.add(geo);
         Fluent pol = new Fluent("pol", true);
-        Fluent negPol = new Fluent("pol", false);
         fluents.add(pol);
 
         State start = new State(type, negGeo, negPol);

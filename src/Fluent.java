@@ -4,25 +4,21 @@
 public class Fluent {
     private String name;
     private boolean value;
+    private Fluent negation;
 
     // Fluents need to be declared by their positive values.
     // The negative version of a fluent is defined straight afterwards
-    // by the constructor. (to be done)
+    // by the constructor.
 
     public Fluent(String name){
         this.name = name;
         this.value = true;
+        //TODO: Make this negation accessible.
+        negation = new Fluent("-" + name, false);
     }
 
-    // Depending on the value of our fluent, its name has to contain
-    // the natural negation or not.
     public Fluent(String name, boolean value){
         this.value = value;
-        if(!value){
-            this.name = "-" + name;
-        } else {
-            this.name = name;
-        }
     }
 
     public boolean getValue() {
@@ -31,5 +27,9 @@ public class Fluent {
 
     public String getName(){
         return this.name;
+    }
+
+    public Fluent getNegation() {
+        return negation;
     }
 }
