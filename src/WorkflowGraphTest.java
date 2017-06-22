@@ -19,10 +19,10 @@ public class WorkflowGraphTest {
         List<Vertex> vertices = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
 
-        Vertex v1 = new Vertex(UUID.randomUUID());
-        Vertex v2 = new Vertex(UUID.randomUUID());
-        Vertex v3 = new Vertex(UUID.randomUUID());
-        Vertex v4 = new Vertex(UUID.randomUUID());
+        Vertex v1 = new Vertex(UUID.randomUUID(), "start");
+        Vertex v2 = new Vertex(UUID.randomUUID(), "geoMap");
+        Vertex v3 = new Vertex(UUID.randomUUID(), "polMap");
+        Vertex v4 = new Vertex(UUID.randomUUID(), "extractRelevantData");
 
         vertices.add(v1);
         vertices.add(v2);
@@ -38,6 +38,11 @@ public class WorkflowGraphTest {
         edges.add(e2);
         edges.add(e3);
         edges.add(e4);
+
+        for(Edge e: edges){
+            e.getStart().addOutgoingEdge(e);
+            e.getEnd().addIncomingEdge(e);
+        }
 
         graph = new Graph(vertices, edges);
     }

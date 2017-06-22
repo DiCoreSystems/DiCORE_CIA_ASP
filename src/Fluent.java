@@ -5,16 +5,15 @@ public class Fluent {
     private String name;
     private boolean value;
     private Fluent negation;
+    private boolean inertial = true;
 
     // Fluents need to be declared by their positive values.
     // The negative version of a fluent is defined straight afterwards
     // by the constructor.
-
     public Fluent(String name){
         this.name = name;
         this.value = true;
-        //TODO: Make this negation accessible.
-        negation = new Fluent("-" + name, false);
+        this.negation = new Fluent("-" + name, false);
     }
 
     public Fluent(String name, boolean value){
@@ -31,5 +30,10 @@ public class Fluent {
 
     public Fluent getNegation() {
         return negation;
+    }
+
+    public boolean isInertial() {
+        //TODO: Check if a given fluent is inertial.
+        return inertial;
     }
 }

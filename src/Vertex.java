@@ -7,11 +7,20 @@ import java.util.UUID;
  */
 public class Vertex {
     private String id;
+    private String name;
     private List<Edge> outgoingEdges;
     private List<Edge> incomingEdges;
 
     public Vertex(UUID id) {
         this.id = id.toString();
+        this.name = "randomState";
+        outgoingEdges = new ArrayList<>();
+        incomingEdges = new ArrayList<>();
+    }
+
+    public Vertex(UUID id, String name) {
+        this.id = id.toString();
+        this.name = name;
         outgoingEdges = new ArrayList<>();
         incomingEdges = new ArrayList<>();
     }
@@ -34,5 +43,9 @@ public class Vertex {
 
     public void addIncomingEdge(Edge e){
         incomingEdges.add(e);
+    }
+
+    public String getName() {
+        return name;
     }
 }

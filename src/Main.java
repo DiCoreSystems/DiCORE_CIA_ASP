@@ -14,18 +14,18 @@ public class Main {
         List<State> states = new ArrayList<>();
 
         //Step 1: Determine all our fluents. Save their positive versions in a list.
-        Fluent type = new Fluent("type", true);
+        Fluent type = new Fluent("type");
         fluents.add(type);
-        Fluent geo = new Fluent("geo", true);
+        Fluent geo = new Fluent("geo");
         fluents.add(geo);
-        Fluent pol = new Fluent("pol", true);
+        Fluent pol = new Fluent("pol");
         fluents.add(pol);
 
-        State start = new State(type, negGeo, negPol);
+        State start = new State(type, geo.getNegation(), pol.getNegation());
         states.add(start);
-        State geoMap = new State(type, geo, negPol);
+        State geoMap = new State(type, geo, pol.getNegation());
         states.add(geoMap);
-        State polMap = new State(type, negGeo, pol);
+        State polMap = new State(type, geo.getNegation(), pol);
         states.add(polMap);
 
         Action getGeoMap = new Action(start, geoMap, "getGeoMap");

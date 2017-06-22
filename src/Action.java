@@ -1,12 +1,15 @@
+import java.util.UUID;
+
 /**
  * Created by CSZ on 30.05.2017.
  */
-public class Action{
+public class Action extends Edge{
     private State startState;
     private State endState;
     private String name;
 
-    public Action(State startState, State endState, String name){
+    public Action(UUID id, State startState, State endState, String name){
+        super(id, startState, endState);
         this.startState = startState;
         this.endState = endState;
         this.name = name;

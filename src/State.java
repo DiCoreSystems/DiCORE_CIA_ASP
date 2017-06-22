@@ -5,24 +5,26 @@ import java.util.*;
  */
 public class State extends Vertex {
     private List<Fluent> fluents = new ArrayList<>();
-    private Set<Action> actions = new HashSet<>();
 
-    public State(UUID id, Fluent... fluents){
+    public State(UUID id, List<Fluent> fluents){
         super(id);
-        for(Fluent f: fluents){
-            this.fluents.add(f);
-        }
+        this.fluents = fluents;
+    }
+
+    public State(UUID id, String name, List<Fluent> fluents){
+        super(id, name);
+        this.fluents = fluents;
     }
 
     public List<Fluent> getFluents(){
         return this.fluents;
     }
 
-    public Set<Action> getActions() {
-        return actions;
+    public List<Edge> getActions() {
+        return this.getOutgoingEdges();
     }
 
     public void addAction(Action a){
-        actions.add(a);
+        this.addOutgoingEdge(a);
     }
 }

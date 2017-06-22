@@ -121,7 +121,7 @@ public class TransitionDiagram {
             }
 
             // Step 5 (Final): Go through our graph and define an occurs-attribute
-            // for each action.
+            // for each action to a given timestep.
 
             int i = 0;
             List<State> statesToVisit = startingStates;
