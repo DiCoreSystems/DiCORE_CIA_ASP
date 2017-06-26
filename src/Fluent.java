@@ -17,6 +17,7 @@ public class Fluent {
     }
 
     public Fluent(String name, boolean value){
+        this.name = name;
         this.value = value;
     }
 

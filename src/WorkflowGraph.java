@@ -18,6 +18,8 @@ public class WorkflowGraph extends Graph {
         List<Vertex> stateVertices = new ArrayList<>();
         List<Vertex> actionVertices = new ArrayList<>();
         List<Fluent> fluents = new ArrayList<>();
+        List<State> states = new ArrayList();
+        List<Action> actions = new ArrayList();
         Vertex startingVertex = null;
         int choiceNR = 1;
         boolean vertexIsAction = false;
@@ -29,6 +31,7 @@ public class WorkflowGraph extends Graph {
 
         //This while loop categorizes every vertex in our original graph.
         while(!verticesToCheck.isEmpty()){
+            // TODO: Use broadsearch algorithm.
             Vertex v = verticesToCheck.get(0);
             verticesToCheck.remove(v);
 
@@ -45,6 +48,7 @@ public class WorkflowGraph extends Graph {
                 stateVertices.add(v);
 
                 if(v.getOutgoingEdges().size() > 1){
+                    // TODO: Is that vertex needed?
                     // A State Vertex with two or more outgoing edges (read: two or more possible actions)
                     // contains a choice that has to be made. So we create a new fluent representing our
                     // choice at this point.
@@ -64,26 +68,44 @@ public class WorkflowGraph extends Graph {
         // Transform all StateVertices to actual States.
         // First attach all fluents to our starting vertex.
         State startingState = new State(UUID.randomUUID(), fluents);
+        states.add(startingState);
 
-        // Now we follow the graph vertex by veterx, until we reach the end.
+        // Now we follow the graph vertex by vertex, until we reach the end.
         // Each passed vertex will yield an Action or a new state.
 
-        for(Edge e: startingVertex.getOutgoingEdges()){
-            Vertex v = e.getEnd();
-            // v should always be an Action vertex
-            // TODO: Can actions result in mutiple states?
-            Vertex nextVertex = v.getOutgoingEdges().get(0).getEnd();
+        Vertex currentVertex = startingVertex;
 
-            //Find out which fluent is changed by our action.
-            for(Fluent f: fluents){
-                if(f.getName().contains(v.getName())){
-                    fluents.remove(f);
-                    fluents.add(f.getNegation());
+        while(true){
+            // TODO: Use broadsearch algorithm.
+            for(Edge e: currentVertex.getOutgoingEdges()){
+                // TODO: Checks for null.
+                Vertex actionVertex = e.getEnd();
+                // v should always be an Action vertex
+                Vertex nextVertex = actionVertex.getOutgoingEdges().get(0).getEnd();
+
+                //Find out which fluent is changed by our action.
+                for(Fluent f: fluents){
+                    if(f.getName().contains(actionVertex.getName())){
+                        fluents.remove(f);
+                        fluents.add(f.getNegation());
+                    }
                 }
+
+                //Create the corresponding state.
+                State newState = new State(UUID.randomUUID(), fluents);
+                states.add(newState);
+
+                Action a = new Action(UUID.randomUUID(), startingState, newState, actionVertex.getName());
+                actions.add(a);
+
+                currentVertex = nextVertex;
             }
 
-            //Create the corresponding state.
-            State newState = new State(UUID.randomUUID(), fluents);
+            if(currentVertex.getOutgoingEdges().isEmpty()){
+                break;
+            }
         }
     }
+
+    //Planned: A method which is called once the graph changes and submits the changes to the TranstionDiagram.
 }

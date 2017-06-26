@@ -19,7 +19,7 @@ public class TransitionDiagram {
         this.fluents = fluents;
         this.actions = actions;
         this.states = states;
-        this.startingStates = getStartingStates(states);
+        //this.startingStates = getStartingStates(states);
     }
 
     public void createASPCode(){
@@ -148,7 +148,7 @@ public class TransitionDiagram {
 
     }
 
-    private List<State> getStartingStates(List<State> states) {
+   /* private List<State> getStartingStates(List<State> states) {
         List<State> result = states;
         for(Action a: actions){
             //Assuming that our graph has no loops, if a action points to a state,
@@ -159,7 +159,7 @@ public class TransitionDiagram {
             states.remove(a.getEndState());
         }
         return result;
-    }
+    } */
 
     // False means remove
     // True means add
