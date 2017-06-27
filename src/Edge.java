@@ -4,9 +4,9 @@ import java.util.UUID;
  * Created by CSZ on 14.06.2017.
  */
 public class Edge {
-    private String id;
-    private Vertex start;
-    private Vertex end;
+    private final String id;
+    private final Vertex start;
+    private final Vertex end;
 
     public Edge(UUID id, Vertex start, Vertex end){
         this.id = id.toString();
@@ -22,15 +22,7 @@ public class Edge {
         return start;
     }
 
-    public void setStart(Vertex start) {
-        this.start = start;
-    }
-
     public Vertex getEnd() {
         return end;
-    }
-
-    public void setEnd(Vertex end) {
-        this.end = end;
     }
 }

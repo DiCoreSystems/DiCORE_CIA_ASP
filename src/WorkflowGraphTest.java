@@ -52,6 +52,10 @@ public class WorkflowGraphTest {
     public void WorkflowGraphTest(){
         WorkflowGraph workflowGraph = new WorkflowGraph(graph.getVertices(), graph.getEdges());
 
-        workflowGraph.translate();
+        TransitionDiagram t = workflowGraph.translate();
+
+        assertEquals(3, t.getStates().size());
+        assertEquals(2, t.getActions().size());
+        assertEquals(3, t.getFluents().size());
     }
 }

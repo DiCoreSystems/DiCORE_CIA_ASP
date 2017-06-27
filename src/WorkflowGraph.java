@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.UUID;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by CSZ on 14.06.2017.
@@ -13,8 +15,8 @@ public class WorkflowGraph extends Graph {
         super(vertices, edges);
     }
 
-    public void translate() {
-        List<Vertex> verticesToCheck = this.getVertices();
+    public TransitionDiagram translate() {
+        List<Vertex> visitedVertices = new ArrayList<>();
         List<Vertex> stateVertices = new ArrayList<>();
         List<Vertex> actionVertices = new ArrayList<>();
         List<Fluent> fluents = new ArrayList<>();
@@ -24,16 +26,19 @@ public class WorkflowGraph extends Graph {
         int choiceNR = 1;
         boolean vertexIsAction = false;
 
-        verticesToCheck.add(this.getVertices().get(0));
-
         // For this example I'm going to assume that our original vertices stand
         // first for States, then an Action, then a State again, and so on...
 
         //This while loop categorizes every vertex in our original graph.
+
+        Queue<Vertex> verticesToCheck = new LinkedBlockingQueue<>();
+        verticesToCheck.add(this.getVertices().get(0));
+        int vertexChangeCounter = verticesToCheck.size();
+
         while(!verticesToCheck.isEmpty()){
-            // TODO: Use broadsearch algorithm.
-            Vertex v = verticesToCheck.get(0);
-            verticesToCheck.remove(v);
+            Vertex v = verticesToCheck.poll();
+            visitedVertices.add(v);
+            --vertexChangeCounter;
 
             if(vertexIsAction){
                 // We have an Action Vertex
@@ -62,8 +67,19 @@ public class WorkflowGraph extends Graph {
                 }
             }
 
-            vertexIsAction = !vertexIsAction;
+            for(Edge e: v.getOutgoingEdges()){
+                if(e.getEnd() != null && !visitedVertices.contains(e.getEnd())){
+                    verticesToCheck.offer(e.getEnd());
+                }
+            }
+
+            if(vertexChangeCounter == 0){
+                vertexIsAction = !vertexIsAction;
+                vertexChangeCounter = verticesToCheck.size();
+            }
         }
+
+        visitedVertices.removeAll(visitedVertices);
 
         // Transform all StateVertices to actual States.
         // First attach all fluents to our starting vertex.
@@ -72,11 +88,10 @@ public class WorkflowGraph extends Graph {
 
         // Now we follow the graph vertex by vertex, until we reach the end.
         // Each passed vertex will yield an Action or a new state.
+        verticesToCheck.offer(startingVertex);
 
-        Vertex currentVertex = startingVertex;
-
-        while(true){
-            // TODO: Use broadsearch algorithm.
+        while(!verticesToCheck.isEmpty()){
+            Vertex currentVertex = verticesToCheck.poll();
             for(Edge e: currentVertex.getOutgoingEdges()){
                 // TODO: Checks for null.
                 Vertex actionVertex = e.getEnd();
@@ -84,15 +99,21 @@ public class WorkflowGraph extends Graph {
                 Vertex nextVertex = actionVertex.getOutgoingEdges().get(0).getEnd();
 
                 //Find out which fluent is changed by our action.
+                // TODO: Look over this again. Fluents will not be correct (yet).
+                List<Fluent> newFluents = new ArrayList<>();
                 for(Fluent f: fluents){
+                    // This one needs improvement. Currently we're connecting a action Vertex with
+                    // the changed fluents just by the name. Also this doesn't allow us to create
+                    // actions which change more than one fluent.
                     if(f.getName().contains(actionVertex.getName())){
-                        fluents.remove(f);
-                        fluents.add(f.getNegation());
+                        newFluents.add(f.getNegation());
+                    } else {
+                        newFluents.add(f);
                     }
                 }
 
                 //Create the corresponding state.
-                State newState = new State(UUID.randomUUID(), fluents);
+                State newState = new State(UUID.randomUUID(), newFluents);
                 states.add(newState);
 
                 Action a = new Action(UUID.randomUUID(), startingState, newState, actionVertex.getName());
@@ -101,10 +122,16 @@ public class WorkflowGraph extends Graph {
                 currentVertex = nextVertex;
             }
 
-            if(currentVertex.getOutgoingEdges().isEmpty()){
-                break;
+            for(Edge e: currentVertex.getOutgoingEdges()){
+                if(e.getEnd() != null && !visitedVertices.contains(e.getEnd())){
+                    verticesToCheck.offer(e.getEnd());
+                }
             }
         }
+
+        TransitionDiagram t = new TransitionDiagram(fluents, actions, states);
+
+        return t;
     }
 
     //Planned: A method which is called once the graph changes and submits the changes to the TranstionDiagram.

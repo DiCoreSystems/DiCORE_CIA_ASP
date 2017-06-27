@@ -2,10 +2,10 @@
  * Created by CSZ on 30.05.2017.
  */
 public class Fluent {
-    private String name;
-    private boolean value;
+    private final String name;
+    private final boolean value;
     private Fluent negation;
-    private boolean inertial = true;
+    private final boolean inertial = true;
 
     // Fluents need to be declared by their positive values.
     // The negative version of a fluent is defined straight afterwards
@@ -13,12 +13,13 @@ public class Fluent {
     public Fluent(String name){
         this.name = name;
         this.value = true;
-        this.negation = new Fluent("-" + name, false);
+        this.negation = new Fluent("-" + name, false, this);
     }
 
-    public Fluent(String name, boolean value){
+    public Fluent(String name, boolean value, Fluent negation){
         this.name = name;
         this.value = value;
+        this.negation = negation;
     }
 
     public boolean getValue() {

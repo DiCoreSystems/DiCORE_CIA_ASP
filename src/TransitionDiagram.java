@@ -9,10 +9,10 @@ import java.util.List;
  * Created by CSZ on 10.06.2017.
  */
 public class TransitionDiagram {
-    private List<Fluent> fluents;
-    private List<Action> actions;
-    private List<State> states;
-    private List<State> startingStates;
+    private final List<Fluent> fluents;
+    private final List<Action> actions;
+    private final List<State> states;
+    //private final List<State> startingStates;
     private File f;
 
     public TransitionDiagram(List<Fluent> fluents, List<Action> actions, List<State> states) {
@@ -22,7 +22,7 @@ public class TransitionDiagram {
         //this.startingStates = getStartingStates(states);
     }
 
-    public void createASPCode(){
+    /*public void createASPCode(){
 
         f = new File("../ASP/output.lp");
 
@@ -146,6 +146,18 @@ public class TransitionDiagram {
             e.printStackTrace();
         }
 
+    } */
+
+    public List<State> getStates() {
+        return states;
+    }
+
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public List<Fluent> getFluents() {
+        return fluents;
     }
 
    /* private List<State> getStartingStates(List<State> states) {
