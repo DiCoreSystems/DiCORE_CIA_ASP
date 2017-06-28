@@ -16,6 +16,7 @@ public class WorkflowGraph extends Graph {
     }
 
     public TransitionDiagram translate() {
+        // TODO: You take the same name for both actions and fluents. They should be different.
         List<Vertex> visitedVertices = new ArrayList<>();
         List<Vertex> stateVertices = new ArrayList<>();
         List<Vertex> actionVertices = new ArrayList<>();
@@ -43,6 +44,7 @@ public class WorkflowGraph extends Graph {
             if(vertexIsAction){
                 // We have an Action Vertex
                 actionVertices.add(v);
+                // TODO: Actions may change more than one thing.
                 // All action change something. So we need to create a fluent that is changed by this
                 // action.
                 Fluent aFluent = new Fluent(v.getName());
@@ -62,7 +64,7 @@ public class WorkflowGraph extends Graph {
                     choiceNR++;
                 }
 
-                if(v.getName() == "start"){
+                if(v.getName().equals("start")){
                     startingVertex = v;
                 }
             }
@@ -70,6 +72,9 @@ public class WorkflowGraph extends Graph {
             for(Edge e: v.getOutgoingEdges()){
                 if(e.getEnd() != null && !visitedVertices.contains(e.getEnd())){
                     verticesToCheck.offer(e.getEnd());
+                } else if(e.getEnd() == null){
+                    // Invalid graph.
+                    return null;
                 }
             }
 
@@ -79,7 +84,7 @@ public class WorkflowGraph extends Graph {
             }
         }
 
-        visitedVertices.removeAll(visitedVertices);
+        visitedVertices.clear();
 
         // Transform all StateVertices to actual States.
         // First attach all fluents to our starting vertex.
@@ -93,7 +98,6 @@ public class WorkflowGraph extends Graph {
         while(!verticesToCheck.isEmpty()){
             Vertex currentVertex = verticesToCheck.poll();
             for(Edge e: currentVertex.getOutgoingEdges()){
-                // TODO: Checks for null.
                 Vertex actionVertex = e.getEnd();
                 // v should always be an Action vertex
                 Vertex nextVertex = actionVertex.getOutgoingEdges().get(0).getEnd();
@@ -118,6 +122,7 @@ public class WorkflowGraph extends Graph {
 
                 Action a = new Action(UUID.randomUUID(), startingState, newState, actionVertex.getName());
                 actions.add(a);
+                startingState.addAction(a);
 
                 currentVertex = nextVertex;
             }
@@ -129,7 +134,11 @@ public class WorkflowGraph extends Graph {
             }
         }
 
-        TransitionDiagram t = new TransitionDiagram(fluents, actions, states);
+        //TODO: A graph can have more than one entry point.
+        List<State> start = new ArrayList<>();
+        start.add(startingState);
+
+        TransitionDiagram t = new TransitionDiagram(fluents, actions, states, start);
 
         return t;
     }

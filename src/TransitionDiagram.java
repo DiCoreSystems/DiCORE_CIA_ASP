@@ -12,17 +12,18 @@ public class TransitionDiagram {
     private final List<Fluent> fluents;
     private final List<Action> actions;
     private final List<State> states;
-    //private final List<State> startingStates;
+    private final List<State> startingStates;
     private File f;
 
-    public TransitionDiagram(List<Fluent> fluents, List<Action> actions, List<State> states) {
+    public TransitionDiagram(List<Fluent> fluents, List<Action> actions, List<State> states,
+                                List<State> startingStates) {
         this.fluents = fluents;
         this.actions = actions;
         this.states = states;
-        //this.startingStates = getStartingStates(states);
+        this.startingStates = startingStates;
     }
 
-    /*public void createASPCode(){
+    public void createASPCode(){
 
         f = new File("../ASP/output.lp");
 
@@ -41,6 +42,11 @@ public class TransitionDiagram {
             // Step 1: DEFINITION OF FLUENTS
             // For this example graph I'm treating all fluents as inertial
             // It may be necessary to check if a fluent is really inertial or not.
+            int n = this.getStates().size();
+
+            w.write("#const n = " + n + ".\n");
+            w.write("step(0.."+ n +").\n");
+
             for(Fluent fluent: fluents){
                 if(fluent.isInertial()){
                     w.write("fluent(inertial," + fluent.getName() + ").\n");
@@ -62,27 +68,31 @@ public class TransitionDiagram {
             // CWA AND INERTIA AXIOM FOR FLUENTS
             for(Fluent fluent: fluents){
                 if(fluent.isInertial()){
-                    w.write("holds(" + fluent.getName() + ",i+1) :- " +
-                            "fluent(inertial," + fluent.getName() + "), " +
-                            "holds(" + fluent.getName() + ",i)," +
-                            "not -holds(" + fluent.getName() + ",i+1), i < n.");
+                    w.write("holds(" + fluent.getName() + ",i+1) :- \n" +
+                            "           fluent(inertial," + fluent.getName() + "), \n" +
+                            "           holds(" + fluent.getName() + ",i),\n" +
+                            "           not -holds(" + fluent.getName() + ",i+1), step(i).\n");
 
-                    w.write("-holds(" + fluent.getName() + ",i+1) :- " +
-                            "fluent(inertial," + fluent.getName() + "), " +
-                            "-holds(" + fluent.getName() + ",i)," +
-                            "not holds(" + fluent.getName() + ",i+1), i < n.");
+                    w.write("-holds(" + fluent.getName() + ",i+1) :- \n" +
+                            "           fluent(inertial," + fluent.getName() + "), \n" +
+                            "           -holds(" + fluent.getName() + ",i),\n" +
+                            "           not holds(" + fluent.getName() + ",i+1), step(i).\n");
                 } else {
-                    w.write("-holds(" + fluent.getName() + ",i+1) :- " +
-                            "fluent(defined," + fluent.getName() + "), " +
-                            "not holds(" + fluent.getName() + ",i).");
+                    w.write("-holds(" + fluent.getName() + ",i+1) :- \n" +
+                            "           fluent(defined," + fluent.getName() + "), \n" +
+                            "           not holds(" + fluent.getName() + ",i).\n");
                 }
             }
 
+            w.write("\n");
+
             // CWA FOR ACTIONS
             for(Action a: actions){
-                w.write("-occurs(" + a.getName() +",I) :-" +
-                        " not occurs(" + a.getName() + ",I).");
+                w.write("-occurs(" + a.getName() +",i) :-" +
+                        " not occurs(" + a.getName() + ",i), step(i).\n");
             }
+
+            w.write("\n");
 
             // Step 3: Get all Fluents from all starting states
             // and define their holds-Attribute for timestamp 0.
@@ -146,7 +156,7 @@ public class TransitionDiagram {
             e.printStackTrace();
         }
 
-    } */
+    }
 
     public List<State> getStates() {
         return states;

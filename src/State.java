@@ -5,6 +5,7 @@ import java.util.*;
  */
 public class State extends Vertex {
     private List<Fluent> fluents = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>();
 
     public State(UUID id, List<Fluent> fluents){
         super(id);
@@ -20,11 +21,11 @@ public class State extends Vertex {
         return this.fluents;
     }
 
-    public List<Edge> getActions() {
-        return this.getOutgoingEdges();
+    public List<Action> getActions() {
+        return this.actions;
     }
 
     public void addAction(Action a){
-        this.addOutgoingEdge(a);
+        this.actions.add(a);
     }
 }

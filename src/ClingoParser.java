@@ -3,5 +3,6 @@
  */
 public class ClingoParser {
     // This class runs a given ASP program via command and checks the result output for errors.
-    // If Clingo detects an error, all changes will be discarded and all changes are undone.
+    // If Clingo detects an error or the resulting logical program is not satisfiable,
+    // all changes will be discarded and all changes are undone.
 }

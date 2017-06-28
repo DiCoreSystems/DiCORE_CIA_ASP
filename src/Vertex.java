@@ -13,7 +13,7 @@ public class Vertex {
 
     public Vertex(UUID id) {
         this.id = id.toString();
-        this.name = "randomState";
+        this.name = "randomVertex";
         outgoingEdges = new ArrayList<>();
         incomingEdges = new ArrayList<>();
     }
