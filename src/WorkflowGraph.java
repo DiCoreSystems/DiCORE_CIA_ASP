@@ -120,7 +120,7 @@ public class WorkflowGraph extends Graph {
                 State newState = new State(UUID.randomUUID(), newFluents);
                 states.add(newState);
 
-                Action a = new Action(UUID.randomUUID(), startingState, newState, actionVertex.getName());
+                Action a = new Action(UUID.randomUUID(), startingState, newState, "get" + actionVertex.getName());
                 actions.add(a);
                 startingState.addAction(a);
 

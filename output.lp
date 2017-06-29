@@ -1,55 +1,53 @@
 #const n = 3.
-step(0..3).
+step(0..n).
 fluent(inertial,type1).
-fluent(inertial,-geoMap).
-fluent(inertial,-polMap).
+fluent(inertial,geoMap).
+fluent(inertial,polMap).
 
-action(geoMap).
-action(polMap).
+action(getgeoMap).
+action(getpolMap).
 
-holds(type1,i+1) :- 
+holds(type1,I+1) :- 
            fluent(inertial,type1), 
-           holds(type1,i),
-           not -holds(type1,i+1), step(i).
--holds(type1,i+1) :- 
+           holds(type1,I),
+           not -holds(type1,I+1), step(I).
+-holds(type1,I+1) :- 
            fluent(inertial,type1), 
-           -holds(type1,i),
-           not holds(type1,i+1), step(i).
-holds(-geoMap,i+1) :- 
-           fluent(inertial,-geoMap), 
-           holds(-geoMap,i),
-           not -holds(-geoMap,i+1), step(i).
--holds(-geoMap,i+1) :- 
-           fluent(inertial,-geoMap), 
-           -holds(-geoMap,i),
-           not holds(-geoMap,i+1), step(i).
-holds(-polMap,i+1) :- 
-           fluent(inertial,-polMap), 
-           holds(-polMap,i),
-           not -holds(-polMap,i+1), step(i).
--holds(-polMap,i+1) :- 
-           fluent(inertial,-polMap), 
-           -holds(-polMap,i),
-           not holds(-polMap,i+1), step(i).
+           -holds(type1,I),
+           not holds(type1,I+1), step(I).
+holds(geoMap,I+1) :- 
+           fluent(inertial,geoMap), 
+           holds(geoMap,I),
+           not -holds(geoMap,I+1), step(I).
+-holds(geoMap,I+1) :- 
+           fluent(inertial,geoMap), 
+           -holds(geoMap,I),
+           not holds(geoMap,I+1), step(I).
+holds(polMap,I+1) :- 
+           fluent(inertial,polMap), 
+           holds(polMap,I),
+           not -holds(polMap,I+1), step(I).
+-holds(polMap,I+1) :- 
+           fluent(inertial,polMap), 
+           -holds(polMap,I),
+           not holds(polMap,I+1), step(I).
 
--occurs(geoMap,i) :- not occurs(geoMap,i), step(i).
--occurs(polMap,i) :- not occurs(polMap,i), step(i).
+-occurs(getgeoMap,I) :- not occurs(getgeoMap,I), step(I).
+-occurs(getpolMap,I) :- not occurs(getpolMap,I), step(I).
 
 holds(type1,0).
 holds(-geoMap,0).
 holds(-polMap,0).
 
-holds(-geoMap,t+1) :- holds(type1,t),
-holds(-geoMap,t),
-holds(-polMap,t),
-occurs(geoMap,t).
+holds(geoMap,T+1) :- holds(type1,T),
+holds(-geoMap,T),
+holds(-polMap,T),
+occurs(getgeoMap,T).
 
-holds(-polMap,t+1) :- holds(type1,t),
-holds(-geoMap,t),
-holds(-polMap,t),
-occurs(polMap,t).
+holds(polMap,T+1) :- holds(type1,T),
+holds(-geoMap,T),
+holds(-polMap,T),
+occurs(getpolMap,T).
 
-occurs(geoMap,0).
-occurs(polMap,0).
-occurs(geoMap,0).
-occurs(polMap,0).
+occurs(getgeoMap,0).
+occurs(getpolMap,0).

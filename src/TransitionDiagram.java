@@ -38,6 +38,7 @@ public class TransitionDiagram {
 
 
         try {
+            // TODO: Don't forget to put the for loops together!
             FileWriter w = new FileWriter(f);
             // Step 1: DEFINITION OF FLUENTS
             // For this example graph I'm treating all fluents as inertial
@@ -45,13 +46,20 @@ public class TransitionDiagram {
             int n = this.getStates().size();
 
             w.write("#const n = " + n + ".\n");
-            w.write("step(0.."+ n +").\n");
+            w.write("step(0..n).\n");
 
             for(Fluent fluent: fluents){
-                if(fluent.isInertial()){
-                    w.write("fluent(inertial," + fluent.getName() + ").\n");
+                String name;
+                if(fluent.getValue()){
+                    name = fluent.getName();
                 } else {
-                    w.write("fluent(defined," + fluent.getName() + ").\n");
+                    name = fluent.getNegation().getName();
+                }
+
+                if(fluent.isInertial()){
+                    w.write("fluent(inertial," + name + ").\n");
+                } else {
+                    w.write("fluent(defined," + name + ").\n");
                 }
             }
 
@@ -67,20 +75,27 @@ public class TransitionDiagram {
 
             // CWA AND INERTIA AXIOM FOR FLUENTS
             for(Fluent fluent: fluents){
-                if(fluent.isInertial()){
-                    w.write("holds(" + fluent.getName() + ",i+1) :- \n" +
-                            "           fluent(inertial," + fluent.getName() + "), \n" +
-                            "           holds(" + fluent.getName() + ",i),\n" +
-                            "           not -holds(" + fluent.getName() + ",i+1), step(i).\n");
-
-                    w.write("-holds(" + fluent.getName() + ",i+1) :- \n" +
-                            "           fluent(inertial," + fluent.getName() + "), \n" +
-                            "           -holds(" + fluent.getName() + ",i),\n" +
-                            "           not holds(" + fluent.getName() + ",i+1), step(i).\n");
+                String name;
+                if(fluent.getValue()){
+                    name = fluent.getName();
                 } else {
-                    w.write("-holds(" + fluent.getName() + ",i+1) :- \n" +
-                            "           fluent(defined," + fluent.getName() + "), \n" +
-                            "           not holds(" + fluent.getName() + ",i).\n");
+                    name = fluent.getNegation().getName();
+                }
+
+                if(fluent.isInertial()){
+                    w.write("holds(" + name + ",I+1) :- \n" +
+                            "           fluent(inertial," + name + "), \n" +
+                            "           holds(" + name + ",I),\n" +
+                            "           not -holds(" + name + ",I+1), step(I).\n");
+
+                    w.write("-holds(" + name + ",I+1) :- \n" +
+                            "           fluent(inertial," + name + "), \n" +
+                            "           -holds(" + name + ",I),\n" +
+                            "           not holds(" + name + ",I+1), step(I).\n");
+                } else {
+                    w.write("-holds(" + name + ",I+1) :- \n" +
+                            "           fluent(defined," + name + "), \n" +
+                            "           not holds(" + name + ",I).\n");
                 }
             }
 
@@ -88,8 +103,8 @@ public class TransitionDiagram {
 
             // CWA FOR ACTIONS
             for(Action a: actions){
-                w.write("-occurs(" + a.getName() +",i) :-" +
-                        " not occurs(" + a.getName() + ",i), step(i).\n");
+                w.write("-occurs(" + a.getName() +",I) :-" +
+                        " not occurs(" + a.getName() + ",I), step(I).\n");
             }
 
             w.write("\n");
@@ -119,11 +134,11 @@ public class TransitionDiagram {
                             if(s_fluent.getValue() != e_fluent.getValue()){
                                 //We've detected a change triggered by this action.
                                 //Write the specified code for it.
-                                w.write("holds(" + s_fluent.getName() + ",t+1) :- ");
+                                w.write("holds(" + e_fluent.getName() + ",T+1) :- ");
                                 for(Fluent s_Fluent2: s1.getFluents()) {
-                                    w.write("holds(" + s_Fluent2.getName() + ",t),\n");
+                                    w.write("holds(" + s_Fluent2.getName() + ",T),\n");
                                 }
-                                w.write("occurs(" + a.getName() + ",t).\n\n");
+                                w.write("occurs(" + a.getName() + ",T).\n\n");
                             }
                         }
                     }
@@ -143,6 +158,9 @@ public class TransitionDiagram {
                         nextVisit.add(a.getEndState());
                     }
                 }
+
+                statesToVisit.clear();
+
                 if(nextVisit.isEmpty()){
                     break;
                 }
