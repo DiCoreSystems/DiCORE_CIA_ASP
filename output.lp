@@ -51,3 +51,5 @@ occurs(getpolMap,T).
 
 occurs(getgeoMap,0).
 occurs(getpolMap,0).
+occurs(getgeoMap,0).
+occurs(getpolMap,0).

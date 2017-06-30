@@ -23,7 +23,7 @@ public class TransitionDiagram {
         this.startingStates = startingStates;
     }
 
-    public void createASPCode(){
+    public File createASPCode(){
 
         f = new File("../ASP/output.lp");
 
@@ -173,7 +173,7 @@ public class TransitionDiagram {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return f;
     }
 
     public List<State> getStates() {

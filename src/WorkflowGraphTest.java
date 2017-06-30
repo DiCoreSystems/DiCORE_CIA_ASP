@@ -1,6 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -66,6 +67,9 @@ public class WorkflowGraphTest {
             assertEquals(3, s.getFluents().size());
         }
 
-        t.createASPCode();
+        File f = t.createASPCode();
+
+        ClingoParser parser = new ClingoParser();
+        assertTrue(parser.run(f));
     }
 }
