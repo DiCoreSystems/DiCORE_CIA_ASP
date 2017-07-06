@@ -13,7 +13,7 @@ public class ClingoParser {
 
         Runtime rt = Runtime.getRuntime();
         try {
-            Process exec = rt.exec("clingo " + filePath);
+            Process exec = rt.exec("clingo " + filePath + " 0");
 
             StringBuilder s = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(exec.getInputStream(), "UTF-8"));
@@ -31,7 +31,11 @@ public class ClingoParser {
 
             System.out.println(message);
 
-            if(message.contains("UNSATISFIABLE") || message.contains("ERROR:")) {
+            // UNSATISFIABLE: Our graph is completely invalid and has to be discarded.
+            // Parsing Failed: Syntax error in our listing.
+
+            if(message.contains("UNSATISFIABLE") || message.contains("parsing failed")) {
+                // TODO: Discard the change.
                 return false;
             }
         } catch (Exception e) {

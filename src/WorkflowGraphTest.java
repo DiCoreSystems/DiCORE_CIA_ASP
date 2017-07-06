@@ -66,8 +66,11 @@ public class WorkflowGraphTest {
         for (State s: t.getStates()){
             assertEquals(3, s.getFluents().size());
         }
+    }
 
-        File f = t.createASPCode();
+    @Test
+    public void ParserTest(){
+        File f = new File("../ASP/test.lp");
 
         ClingoParser parser = new ClingoParser();
         assertTrue(parser.run(f));

@@ -58,31 +58,10 @@ public class TransitionDiagram {
 
                 if(fluent.isInertial()){
                     w.write("fluent(inertial," + name + ").\n");
-                } else {
-                    w.write("fluent(defined," + name + ").\n");
-                }
-            }
 
-            w.write("\n");
+                    w.write("\n");
 
-            // DEFINITION OF ACTIONS.
-            for(Action a: actions){
-                a.getStartState().getActions().add(a);
-                w.write("action(" + a.getName() +").\n");
-            }
-
-            w.write("\n");
-
-            // CWA AND INERTIA AXIOM FOR FLUENTS
-            for(Fluent fluent: fluents){
-                String name;
-                if(fluent.getValue()){
-                    name = fluent.getName();
-                } else {
-                    name = fluent.getNegation().getName();
-                }
-
-                if(fluent.isInertial()){
+                    // INERTIA AXIOM FOR FLUENTS
                     w.write("holds(" + name + ",I+1) :- \n" +
                             "           fluent(inertial," + name + "), \n" +
                             "           holds(" + name + ",I),\n" +
@@ -93,16 +72,27 @@ public class TransitionDiagram {
                             "           -holds(" + name + ",I),\n" +
                             "           not holds(" + name + ",I+1), step(I).\n");
                 } else {
+                    w.write("fluent(defined," + name + ").\n");
+
+                    w.write("\n");
+
+                    // CWA FOR FLUENTS
                     w.write("-holds(" + name + ",I+1) :- \n" +
                             "           fluent(defined," + name + "), \n" +
                             "           not holds(" + name + ",I).\n");
                 }
             }
 
-            w.write("\n");
 
-            // CWA FOR ACTIONS
+
+            // DEFINITION OF ACTIONS.
             for(Action a: actions){
+                a.getStartState().getActions().add(a);
+                w.write("action(" + a.getName() +").\n");
+
+                w.write("\n");
+
+                // CWA FOR ACTIONS
                 w.write("-occurs(" + a.getName() +",I) :-" +
                         " not occurs(" + a.getName() + ",I), step(I).\n");
             }
