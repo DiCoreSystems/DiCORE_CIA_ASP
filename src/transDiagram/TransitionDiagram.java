@@ -1,7 +1,6 @@
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+package transDiagram;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +12,7 @@ public class TransitionDiagram {
     private final List<Action> actions;
     private final List<State> states;
     private final List<State> startingStates;
+    private final File configFile = new File("config.txt");
     private File f;
 
     public TransitionDiagram(List<Fluent> fluents, List<Action> actions, List<State> states,
@@ -25,7 +25,15 @@ public class TransitionDiagram {
 
     public File createASPCode(){
 
-        f = new File("../ASP/output.lp");
+        FileReader fr;
+        try {
+            fr = new FileReader(configFile);
+            BufferedReader r = new BufferedReader(fr);
+            String configPath = r.readLine();
+            f = new File(configPath + "/new.lp");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 //        if(!(f.exists() && !f.isDirectory())){
             try {

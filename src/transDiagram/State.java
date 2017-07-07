@@ -1,3 +1,7 @@
+package transDiagram;
+
+import graph.Vertex;
+
 import java.util.*;
 
 /**

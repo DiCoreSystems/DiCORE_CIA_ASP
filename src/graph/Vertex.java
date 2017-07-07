@@ -1,3 +1,5 @@
+package graph;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -10,6 +12,7 @@ public class Vertex {
     private String name;
     private List<Edge> outgoingEdges;
     private List<Edge> incomingEdges;
+    public boolean vertexIsAction;
 
     public Vertex(UUID id) {
         this.id = id.toString();
@@ -48,4 +51,6 @@ public class Vertex {
     public String getName() {
         return name;
     }
+
+    public boolean IsAction(){ return vertexIsAction; }
 }

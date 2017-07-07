@@ -1,7 +1,18 @@
+package test;
+
+import graph.Edge;
+import graph.Graph;
+import graph.Vertex;
+import graph.WorkflowGraph;
 import org.junit.Before;
 import org.junit.Test;
+import parser.ClingoParser;
+import transDiagram.State;
+import transDiagram.TransitionDiagram;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,38 +25,33 @@ import static org.junit.Assert.*;
 public class WorkflowGraphTest {
 
     private Graph graph;
+    private final File configFile = new File("config.txt");
 
     @Before
     public void GraphSetUp(){
-        List<Vertex> vertices = new ArrayList<>();
-        List<Edge> edges = new ArrayList<>();
+        graph = new Graph();
 
         Vertex v1 = new Vertex(UUID.randomUUID(), "start");
         Vertex v2 = new Vertex(UUID.randomUUID(), "geoMap");
+        v2.vertexIsAction  = true;
         Vertex v3 = new Vertex(UUID.randomUUID(), "polMap");
+        v3.vertexIsAction = true;
         Vertex v4 = new Vertex(UUID.randomUUID(), "extractRelevantData");
 
-        vertices.add(v1);
-        vertices.add(v2);
-        vertices.add(v3);
-        vertices.add(v4);
+        graph.addVertex(v1);
+        graph.addVertex(v2);
+        graph.addVertex(v3);
+        graph.addVertex(v4);
 
-        Edge e1 = new Edge(UUID.randomUUID(), v1, v2);
-        Edge e2 = new Edge(UUID.randomUUID(), v1, v3);
-        Edge e3 = new Edge(UUID.randomUUID(), v2, v4);
-        Edge e4 = new Edge(UUID.randomUUID(), v3, v4);
+        graph.addEdge(new Edge(UUID.randomUUID(), v1, v2));
+        graph.addEdge(new Edge(UUID.randomUUID(), v1, v3));
+        graph.addEdge(new Edge(UUID.randomUUID(), v2, v4));
+        graph.addEdge(new Edge(UUID.randomUUID(), v3, v4));
 
-        edges.add(e1);
-        edges.add(e2);
-        edges.add(e3);
-        edges.add(e4);
-
-        for(Edge e: edges){
+        for(Edge e: graph.getEdges()){
             e.getStart().addOutgoingEdge(e);
             e.getEnd().addIncomingEdge(e);
         }
-
-        graph = new Graph(vertices, edges);
     }
 
 
@@ -70,9 +76,20 @@ public class WorkflowGraphTest {
 
     @Test
     public void ParserTest(){
-        File f = new File("../ASP/test.lp");
+        File f = null;
+        FileReader fr;
+        try {
+            fr = new FileReader(configFile);
+            BufferedReader r = new BufferedReader(fr);
+            String configPath = r.readLine();
+            f = new File(configPath + "/test.lp");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         ClingoParser parser = new ClingoParser();
+        assertNotNull(f);
         assertTrue(parser.run(f));
     }
 }

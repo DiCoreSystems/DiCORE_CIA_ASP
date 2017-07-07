@@ -1,3 +1,6 @@
+package graph;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -6,6 +9,11 @@ import java.util.List;
 public class Graph {
     private List<Vertex> vertices;
     private List<Edge> edges;
+
+    public Graph(){
+        vertices = new ArrayList<>();
+        edges = new ArrayList();
+    }
 
     public Graph(List<Vertex> vertices, List<Edge> edges){
         this.vertices = vertices;
@@ -16,15 +24,15 @@ public class Graph {
         return vertices;
     }
 
-    public void setVertices(List<Vertex> vertices) {
-        this.vertices = vertices;
+    public void addVertex(Vertex v) {
+        vertices.add(v);
     }
 
     public List<Edge> getEdges() {
         return edges;
     }
 
-    public void setEdges(List<Edge> edges) {
-        this.edges = edges;
+    public void addEdge(Edge e) {
+        edges.add(e);
     }
 }

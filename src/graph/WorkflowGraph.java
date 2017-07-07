@@ -1,3 +1,10 @@
+package graph;
+
+import transDiagram.Action;
+import transDiagram.Fluent;
+import transDiagram.State;
+import transDiagram.TransitionDiagram;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -25,7 +32,7 @@ public class WorkflowGraph extends Graph {
         List<Action> actions = new ArrayList();
         Vertex startingVertex = null;
         int choiceNR = 1;
-        boolean vertexIsAction = false;
+        //boolean vertexIsAction = false;
 
         // For this example I'm going to assume that our original vertices stand
         // first for States, then an Action, then a State again, and so on...
@@ -41,7 +48,7 @@ public class WorkflowGraph extends Graph {
             visitedVertices.add(v);
             --vertexChangeCounter;
 
-            if(vertexIsAction){
+            if(v.IsAction()){
                 // We have an Action Vertex
                 actionVertices.add(v);
                 // TODO: Actions may change more than one thing.
@@ -79,7 +86,6 @@ public class WorkflowGraph extends Graph {
             }
 
             if(vertexChangeCounter == 0){
-                vertexIsAction = !vertexIsAction;
                 vertexChangeCounter = verticesToCheck.size();
             }
         }

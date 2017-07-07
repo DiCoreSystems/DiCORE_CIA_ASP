@@ -1,9 +1,14 @@
+package transDiagram;
+
+import graph.Edge;
+import graph.Vertex;
+
 import java.util.UUID;
 
 /**
  * Created by CSZ on 30.05.2017.
  */
-public class Action extends Edge{
+public class Action extends Edge {
     private State startState;
     private State endState;
     private String name;

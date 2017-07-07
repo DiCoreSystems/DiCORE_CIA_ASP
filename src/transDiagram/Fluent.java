@@ -1,3 +1,5 @@
+package transDiagram;
+
 /**
  * Created by CSZ on 30.05.2017.
  */
