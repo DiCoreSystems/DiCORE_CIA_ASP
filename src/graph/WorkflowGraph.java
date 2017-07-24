@@ -32,7 +32,6 @@ public class WorkflowGraph extends Graph {
         List<Action> actions = new ArrayList();
         Vertex startingVertex = null;
         int choiceNR = 1;
-        //boolean vertexIsAction = false;
 
         // For this example I'm going to assume that our original vertices stand
         // first for States, then an Action, then a State again, and so on...
@@ -41,12 +40,10 @@ public class WorkflowGraph extends Graph {
 
         Queue<Vertex> verticesToCheck = new LinkedBlockingQueue<>();
         verticesToCheck.add(this.getVertices().get(0));
-        int vertexChangeCounter = verticesToCheck.size();
 
         while(!verticesToCheck.isEmpty()){
             Vertex v = verticesToCheck.poll();
             visitedVertices.add(v);
-            --vertexChangeCounter;
 
             if(v.IsAction()){
                 // We have an Action Vertex
@@ -73,6 +70,9 @@ public class WorkflowGraph extends Graph {
 
                 if(v.getName().equals("start")){
                     startingVertex = v;
+                } else {
+                    Fluent f = new Fluent(v.getName());
+                    fluents.add(f);
                 }
             }
 
@@ -83,10 +83,6 @@ public class WorkflowGraph extends Graph {
                     // Invalid graph.
                     return null;
                 }
-            }
-
-            if(vertexChangeCounter == 0){
-                vertexChangeCounter = verticesToCheck.size();
             }
         }
 

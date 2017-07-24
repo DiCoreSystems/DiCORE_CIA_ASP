@@ -32,21 +32,33 @@ public class WorkflowGraphTest {
         graph = new Graph();
 
         Vertex v1 = new Vertex(UUID.randomUUID(), "start");
-        Vertex v2 = new Vertex(UUID.randomUUID(), "geoMap");
-        v2.vertexIsAction  = true;
-        Vertex v3 = new Vertex(UUID.randomUUID(), "polMap");
-        v3.vertexIsAction = true;
-        Vertex v4 = new Vertex(UUID.randomUUID(), "extractRelevantData");
+        Vertex v2 = new Vertex(UUID.randomUUID(), "POI");
+        Vertex v3 = new Vertex(UUID.randomUUID(), "GPSCoord");
+        Vertex v4 = new Vertex(UUID.randomUUID(), "chooseMapType");
+        Vertex v5 = new Vertex(UUID.randomUUID(), "GeoMap");
+        v5.vertexIsAction  = true;
+        Vertex v6 = new Vertex(UUID.randomUUID(), "PolMap");
+        v6.vertexIsAction = true;
+        Vertex v7 = new Vertex(UUID.randomUUID(), "extractRelevantData");
+        Vertex v8 = new Vertex(UUID.randomUUID(), "showData");
 
         graph.addVertex(v1);
         graph.addVertex(v2);
         graph.addVertex(v3);
         graph.addVertex(v4);
+        graph.addVertex(v5);
+        graph.addVertex(v6);
+        graph.addVertex(v7);
+        graph.addVertex(v8);
 
         graph.addEdge(new Edge(UUID.randomUUID(), v1, v2));
-        graph.addEdge(new Edge(UUID.randomUUID(), v1, v3));
-        graph.addEdge(new Edge(UUID.randomUUID(), v2, v4));
+        graph.addEdge(new Edge(UUID.randomUUID(), v2, v3));
         graph.addEdge(new Edge(UUID.randomUUID(), v3, v4));
+        graph.addEdge(new Edge(UUID.randomUUID(), v4, v5));
+        graph.addEdge(new Edge(UUID.randomUUID(), v4, v6));
+        graph.addEdge(new Edge(UUID.randomUUID(), v5, v7));
+        graph.addEdge(new Edge(UUID.randomUUID(), v6, v7));
+        graph.addEdge(new Edge(UUID.randomUUID(), v7, v8));
 
         for(Edge e: graph.getEdges()){
             e.getStart().addOutgoingEdge(e);
@@ -61,7 +73,9 @@ public class WorkflowGraphTest {
 
         TransitionDiagram t = workflowGraph.translate();
 
-        assertEquals(3, t.getStates().size());
+        t.createASPCode();
+
+        /*assertEquals(3, t.getStates().size());
         assertEquals(2, t.getActions().size());
         assertEquals(3, t.getFluents().size());
 
@@ -71,7 +85,7 @@ public class WorkflowGraphTest {
 
         for (State s: t.getStates()){
             assertEquals(3, s.getFluents().size());
-        }
+        }*/
     }
 
     @Test
@@ -82,7 +96,7 @@ public class WorkflowGraphTest {
             fr = new FileReader(configFile);
             BufferedReader r = new BufferedReader(fr);
             String configPath = r.readLine();
-            f = new File(configPath + "/test.lp");
+            f = new File(configPath + "/domains-test.lp");
         } catch (Exception e) {
             e.printStackTrace();
         }
