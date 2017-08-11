@@ -53,4 +53,12 @@ public class Vertex {
     }
 
     public boolean IsAction(){ return vertexIsAction; }
+
+    public List<Vertex> getPredecessors() {
+        List<Vertex> result = new ArrayList<>();
+        for(Edge e: this.getIncomingEdges()){
+            result.add(e.getStart());
+        }
+        return result;
+    }
 }

@@ -1,4 +1,4 @@
-#const n = 4.
+#const n = 2.
 step(0..n).
 fluent(inertial,POI).
 
@@ -103,63 +103,28 @@ holds(showData,I+1) :-
 action(getPOI).
 
 -occurs(getPOI,I) :- not occurs(getPOI,I), step(I).
-action(getGeoMap).
 
--occurs(getGeoMap,I) :- not occurs(getGeoMap,I), step(I).
-action(getPolMap).
-
--occurs(getPolMap,I) :- not occurs(getPolMap,I), step(I).
-
-holds(POI,0).
-holds(GPSCoord,0).
+holds(-POI,0).
+holds(-GPSCoord,0).
 holds(type1,0).
 holds(chooseMapType,0).
 holds(-GeoMap,0).
 holds(-PolMap,0).
-holds(extractRelevantData,0).
-holds(extractRelevantData,0).
+holds(-extractRelevantData,0).
+holds(-extractRelevantData,0).
 holds(showData,0).
 holds(showData,0).
 
-holds(-POI,T+1) :- holds(POI,T),
-holds(GPSCoord,T),
+holds(POI,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
 holds(type1,T),
 holds(chooseMapType,T),
 holds(-GeoMap,T),
 holds(-PolMap,T),
-holds(extractRelevantData,T),
-holds(extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
 holds(showData,T),
 holds(showData,T),
 occurs(getPOI,T).
 
-holds(GeoMap,T+1) :- holds(POI,T),
-holds(GPSCoord,T),
-holds(type1,T),
-holds(chooseMapType,T),
-holds(-GeoMap,T),
-holds(-PolMap,T),
-holds(extractRelevantData,T),
-holds(extractRelevantData,T),
-holds(showData,T),
-holds(showData,T),
-occurs(getGeoMap,T).
-
-holds(PolMap,T+1) :- holds(POI,T),
-holds(GPSCoord,T),
-holds(type1,T),
-holds(chooseMapType,T),
-holds(-GeoMap,T),
-holds(-PolMap,T),
-holds(extractRelevantData,T),
-holds(extractRelevantData,T),
-holds(showData,T),
-holds(showData,T),
-occurs(getPolMap,T).
-
 occurs(getPOI,0).
-occurs(getGeoMap,0).
-occurs(getPolMap,0).
-occurs(getPOI,0).
-occurs(getGeoMap,0).
-occurs(getPolMap,0).

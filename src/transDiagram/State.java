@@ -6,18 +6,23 @@ import java.util.*;
 
 /**
  * Created by CSZ on 30.05.2017.
+ * Important: A state and its corresponding vertex must have the same name.
  */
-public class State extends Vertex {
+public class State {
+    private UUID id;
+    private String name;
     private List<Fluent> fluents = new ArrayList<>();
     private List<Action> actions = new ArrayList<>();
 
     public State(UUID id, List<Fluent> fluents){
-        super(id);
+        this.id = id;
+        this.name = name;
         this.fluents = fluents;
     }
 
     public State(UUID id, String name, List<Fluent> fluents){
-        super(id, name);
+        this.id = id;
+        this.name = name;
         this.fluents = fluents;
     }
 
@@ -32,4 +37,6 @@ public class State extends Vertex {
     public void addAction(Action a){
         this.actions.add(a);
     }
+
+    public String getName() { return name; }
 }

@@ -18,20 +18,22 @@ public class WorkflowGraph extends Graph {
 
     // This class takes care of translating a WorkflowGraph to a corresponding TransitionDiagram.
 
+    List<Vertex> visitedVertices = new ArrayList<>();
+    List<Vertex> stateVertices = new ArrayList<>();
+    List<Vertex> actionVertices = new ArrayList<>();
+    List<Fluent> fluents = new ArrayList<>();
+    List<State> states = new ArrayList();
+    List<Action> actions = new ArrayList();
+    Vertex startingVertex = null;
+    int choiceNR = 1;
+    int timeStep = 0;
+
     public WorkflowGraph(List<Vertex> vertices, List<Edge> edges){
         super(vertices, edges);
     }
 
     public TransitionDiagram translate() {
-        // TODO: You take the same name for both actions and fluents. They should be different.
-        List<Vertex> visitedVertices = new ArrayList<>();
-        List<Vertex> stateVertices = new ArrayList<>();
-        List<Vertex> actionVertices = new ArrayList<>();
-        List<Fluent> fluents = new ArrayList<>();
-        List<State> states = new ArrayList();
-        List<Action> actions = new ArrayList();
-        Vertex startingVertex = null;
-        int choiceNR = 1;
+
 
         // For this example I'm going to assume that our original vertices stand
         // first for States, then an Action, then a State again, and so on...
@@ -90,7 +92,7 @@ public class WorkflowGraph extends Graph {
 
         // Transform all StateVertices to actual States.
         // First attach all fluents to our starting vertex.
-        State startingState = new State(UUID.randomUUID(), fluents);
+        State startingState = new State(UUID.randomUUID(), "start", fluents);
         states.add(startingState);
 
         // Now we follow the graph vertex by vertex, until we reach the end.
@@ -99,39 +101,47 @@ public class WorkflowGraph extends Graph {
 
         while(!verticesToCheck.isEmpty()){
             Vertex currentVertex = verticesToCheck.poll();
+            State newState;
+
             for(Edge e: currentVertex.getOutgoingEdges()){
-                Vertex actionVertex = e.getEnd();
-                // v should always be an Action vertex
-                Vertex nextVertex = actionVertex.getOutgoingEdges().get(0).getEnd();
+                Vertex nextVertex = e.getEnd();
+                if(nextVertex == null)
+                    break;
 
                 //Find out which fluent is changed by our action.
                 // TODO: Look over this again. Fluents will not be correct (yet).
                 List<Fluent> newFluents = new ArrayList<>();
                 for(Fluent f: fluents){
                     // This one needs improvement. Currently we're connecting a action Vertex with
-                    // the changed fluents just by the name. Also this doesn't allow us to create
-                    // actions which change more than one fluent.
-                    if(f.getName().contains(actionVertex.getName())){
+                    // the changed fluents just by the name.
+                    if(f.getName().contains(nextVertex.getName())){
                         newFluents.add(f.getNegation());
                     } else {
                         newFluents.add(f);
                     }
                 }
 
-                //Create the corresponding state.
-                State newState = new State(UUID.randomUUID(), newFluents);
-                states.add(newState);
+                // Find the corresponding state of our vertex.
+                State currentState = checkForName(currentVertex.getName());
 
-                Action a = new Action(UUID.randomUUID(), startingState, newState, "get" + actionVertex.getName());
-                actions.add(a);
-                startingState.addAction(a);
+                if(nextVertex.getOutgoingEdges().get(0).getEnd().IsAction()){
+                    // State-Action-Action
+                    newState = new State(UUID.randomUUID(), nextVertex.getName(), newFluents);
+                    states.add(newState);
 
-                currentVertex = nextVertex;
-            }
+                    Action a = new Action(UUID.randomUUID(), currentState, newState, "get" + nextVertex.getName());
+                    actions.add(a);
+                    newState.addAction(a);
+                } else {
+                    // State-Action-State
+                    newState = new State(UUID.randomUUID(), (nextVertex.getOutgoingEdges().get(0).getEnd().getName())
+                            , newFluents);
+                    states.add(newState);
 
-            for(Edge e: currentVertex.getOutgoingEdges()){
-                if(e.getEnd() != null && !visitedVertices.contains(e.getEnd())){
-                    verticesToCheck.offer(e.getEnd());
+                    Action a = new Action(UUID.randomUUID(), currentState, newState, "get" +
+                            nextVertex.getName());
+                    actions.add(a);
+                    newState.addAction(a);
                 }
             }
         }
@@ -143,6 +153,15 @@ public class WorkflowGraph extends Graph {
         TransitionDiagram t = new TransitionDiagram(fluents, actions, states, start);
 
         return t;
+    }
+
+    private State checkForName(String name){
+        for(State s: states){
+            if(s.getName().equals(name)){
+                return s;
+            }
+        }
+        return null;
     }
 
     //Planned: A method which is called once the graph changes and submits the changes to the TranstionDiagram.
