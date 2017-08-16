@@ -1,4 +1,4 @@
-#const n = 2.
+#const n = 9.
 step(0..n).
 fluent(inertial,POI).
 
@@ -103,6 +103,27 @@ holds(showData,I+1) :-
 action(getPOI).
 
 -occurs(getPOI,I) :- not occurs(getPOI,I), step(I).
+action(getGPSCoord).
+
+-occurs(getGPSCoord,I) :- not occurs(getGPSCoord,I), step(I).
+action(getchooseMapType).
+
+-occurs(getchooseMapType,I) :- not occurs(getchooseMapType,I), step(I).
+action(getchooseMapType).
+
+-occurs(getchooseMapType,I) :- not occurs(getchooseMapType,I), step(I).
+action(getGeoMap).
+
+-occurs(getGeoMap,I) :- not occurs(getGeoMap,I), step(I).
+action(getPolMap).
+
+-occurs(getPolMap,I) :- not occurs(getPolMap,I), step(I).
+action(getextractRelevantData).
+
+-occurs(getextractRelevantData,I) :- not occurs(getextractRelevantData,I), step(I).
+action(getextractRelevantData).
+
+-occurs(getextractRelevantData,I) :- not occurs(getextractRelevantData,I), step(I).
 
 holds(-POI,0).
 holds(-GPSCoord,0).
@@ -126,5 +147,245 @@ holds(-extractRelevantData,T),
 holds(showData,T),
 holds(showData,T),
 occurs(getPOI,T).
+
+holds(-POI,T+1) :- holds(POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getGPSCoord,T).
+
+holds(GPSCoord,T+1) :- holds(POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getGPSCoord,T).
+
+holds(-GPSCoord,T+1) :- holds(-POI,T),
+holds(GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getchooseMapType,T).
+
+holds(-chooseMapType,T+1) :- holds(-POI,T),
+holds(GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getchooseMapType,T).
+
+holds(-GPSCoord,T+1) :- holds(-POI,T),
+holds(GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getchooseMapType,T).
+
+holds(-chooseMapType,T+1) :- holds(-POI,T),
+holds(GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getchooseMapType,T).
+
+holds(chooseMapType,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(-chooseMapType,T),
+holds(-GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getGeoMap,T).
+
+holds(GeoMap,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(-chooseMapType,T),
+holds(-GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getGeoMap,T).
+
+holds(chooseMapType,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(-chooseMapType,T),
+holds(-GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getPolMap,T).
+
+holds(PolMap,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(-chooseMapType,T),
+holds(-GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getPolMap,T).
+
+holds(-GeoMap,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getextractRelevantData,T).
+
+holds(extractRelevantData,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getextractRelevantData,T).
+
+holds(extractRelevantData,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getextractRelevantData,T).
+
+holds(extractRelevantData,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getextractRelevantData,T).
+
+holds(extractRelevantData,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(GeoMap,T),
+holds(-PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getextractRelevantData,T).
+
+holds(-PolMap,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getextractRelevantData,T).
+
+holds(extractRelevantData,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getextractRelevantData,T).
+
+holds(extractRelevantData,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getextractRelevantData,T).
+
+holds(extractRelevantData,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getextractRelevantData,T).
+
+holds(extractRelevantData,T+1) :- holds(-POI,T),
+holds(-GPSCoord,T),
+holds(type1,T),
+holds(chooseMapType,T),
+holds(-GeoMap,T),
+holds(PolMap,T),
+holds(-extractRelevantData,T),
+holds(-extractRelevantData,T),
+holds(showData,T),
+holds(showData,T),
+occurs(getextractRelevantData,T).
 
 occurs(getPOI,0).

@@ -105,6 +105,7 @@ public class WorkflowGraph extends Graph {
 
             for(Edge e: currentVertex.getOutgoingEdges()){
                 Vertex nextVertex = e.getEnd();
+                verticesToCheck.offer(nextVertex);
                 if(nextVertex == null)
                     break;
 
@@ -124,24 +125,25 @@ public class WorkflowGraph extends Graph {
                 // Find the corresponding state of our vertex.
                 State currentState = checkForName(currentVertex.getName());
 
-                if(nextVertex.getOutgoingEdges().get(0).getEnd().IsAction()){
-                    // State-Action-Action
-                    newState = new State(UUID.randomUUID(), nextVertex.getName(), newFluents);
-                    states.add(newState);
+                for(Edge f: nextVertex.getOutgoingEdges()){
+                    if(f.getEnd().IsAction()){
+                        // State-Action-Action
+                        newState = new State(UUID.randomUUID(), nextVertex.getName(), newFluents);
+                        states.add(newState);
 
-                    Action a = new Action(UUID.randomUUID(), currentState, newState, "get" + nextVertex.getName());
-                    actions.add(a);
-                    newState.addAction(a);
-                } else {
-                    // State-Action-State
-                    newState = new State(UUID.randomUUID(), (nextVertex.getOutgoingEdges().get(0).getEnd().getName())
-                            , newFluents);
-                    states.add(newState);
+                        Action a = new Action(UUID.randomUUID(), currentState, newState, "get" + nextVertex.getName());
+                        actions.add(a);
+                        newState.addAction(a);
+                    } else {
+                        // State-Action-State
+                        newState = new State(UUID.randomUUID(), (e.getEnd().getName()), newFluents);
+                        states.add(newState);
 
-                    Action a = new Action(UUID.randomUUID(), currentState, newState, "get" +
-                            nextVertex.getName());
-                    actions.add(a);
-                    newState.addAction(a);
+                        Action a = new Action(UUID.randomUUID(), currentState, newState, "get" +
+                                nextVertex.getName());
+                        actions.add(a);
+                        newState.addAction(a);
+                    }
                 }
             }
         }
@@ -159,6 +161,11 @@ public class WorkflowGraph extends Graph {
         for(State s: states){
             if(s.getName().equals(name)){
                 return s;
+            }
+        }
+        for(Action a: actions){
+            if(a.getStartState().getName().equals(name)){
+                return a.getStartState();
             }
         }
         return null;
