@@ -12,7 +12,7 @@ public class Vertex {
     private String name;
     private List<Edge> outgoingEdges;
     private List<Edge> incomingEdges;
-    public boolean vertexIsAction;
+    public boolean vertexIsAction = false;
 
     public Vertex(UUID id) {
         this.id = id.toString();

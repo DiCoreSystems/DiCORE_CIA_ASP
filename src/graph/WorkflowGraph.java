@@ -125,24 +125,32 @@ public class WorkflowGraph extends Graph {
                 // Find the corresponding state of our vertex.
                 State currentState = checkForName(currentVertex.getName());
 
-                for(Edge f: nextVertex.getOutgoingEdges()){
-                    if(f.getEnd().IsAction()){
-                        // State-Action-Action
-                        newState = new State(UUID.randomUUID(), nextVertex.getName(), newFluents);
-                        states.add(newState);
+                for(Edge out: nextVertex.getOutgoingEdges()){
+                    Vertex nextNextVertex = out.getEnd();
+                    if(nextNextVertex.IsAction()){
+                        // State- - - - - - -Action- - - - - - - -Action
+                        // We're inserting a new State   ^^^^  ther to save the changes from the previous action.
+                        if(checkForName(nextVertex.getName()) == null){
+                            newState = new State(UUID.randomUUID(), nextVertex.getName(), newFluents);
+                            states.add(newState);
 
-                        Action a = new Action(UUID.randomUUID(), currentState, newState, "get" + nextVertex.getName());
-                        actions.add(a);
-                        newState.addAction(a);
+                            Action a = new Action(UUID.randomUUID(), currentState, newState, "get" + nextVertex.getName());
+                            actions.add(a);
+                            newState.addAction(a);
+                        }
                     } else {
-                        // State-Action-State
-                        newState = new State(UUID.randomUUID(), (e.getEnd().getName()), newFluents);
-                        states.add(newState);
+                        // State- - - - - - -Action- - - - - - - -State
+                        // No need to create a new State here,
+                        // we can use the nextNextVertex as a state to save changes.
+                        if(checkForName(nextNextVertex.getName()) == null){
+                            newState = new State(UUID.randomUUID(), nextNextVertex.getName(), newFluents);
+                            states.add(newState);
 
-                        Action a = new Action(UUID.randomUUID(), currentState, newState, "get" +
-                                nextVertex.getName());
-                        actions.add(a);
-                        newState.addAction(a);
+                            Action a = new Action(UUID.randomUUID(), currentState, newState, "get" +
+                                    nextVertex.getName());
+                            actions.add(a);
+                            newState.addAction(a);
+                        }
                     }
                 }
             }

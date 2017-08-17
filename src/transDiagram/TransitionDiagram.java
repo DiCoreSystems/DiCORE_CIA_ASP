@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by CSZ on 10.06.2017.
+ * Created by Jan Brümmer on 10.06.2017.
+ * This class represents the final step in our conversion.  All actions and states in our WorkflowGraph are
+ * now directly translated to ASP code.
  */
 public class TransitionDiagram {
     private final List<Fluent> fluents;
@@ -50,11 +52,13 @@ public class TransitionDiagram {
             FileWriter w = new FileWriter(f);
             // Step 1: DEFINITION OF FLUENTS
             // For this example graph I'm treating all fluents as inertial
-            // It may be necessary to check if a fluent is really inertial or not.
-            int n = this.getStates().size();
+            // But it is necessary to check if a fluent is really inertial or not.
 
+            int n = this.getStates().size();
             w.write("#const n = " + n + ".\n");
             w.write("step(0..n).\n");
+
+            w.write("\n");
 
             for(Fluent fluent: fluents){
                 String name;
@@ -66,8 +70,6 @@ public class TransitionDiagram {
 
                 if(fluent.isInertial()){
                     w.write("fluent(inertial," + name + ").\n");
-
-                    w.write("\n");
 
                     // INERTIA AXIOM FOR FLUENTS
                     w.write("holds(" + name + ",I+1) :- \n" +
@@ -82,13 +84,13 @@ public class TransitionDiagram {
                 } else {
                     w.write("fluent(defined," + name + ").\n");
 
-                    w.write("\n");
-
                     // CWA FOR FLUENTS
                     w.write("-holds(" + name + ",I+1) :- \n" +
                             "           fluent(defined," + name + "), \n" +
                             "           not holds(" + name + ",I).\n");
                 }
+
+                w.write("\n");
             }
 
 
@@ -97,8 +99,6 @@ public class TransitionDiagram {
             for(Action a: actions){
                 a.getStartState().getActions().add(a);
                 w.write("action(" + a.getName() +").\n");
-
-                w.write("\n");
 
                 // CWA FOR ACTIONS
                 w.write("-occurs(" + a.getName() +",I) :-" +
@@ -132,11 +132,11 @@ public class TransitionDiagram {
                             if(s_fluent.getValue() != e_fluent.getValue()){
                                 //We've detected a change triggered by this action.
                                 //Write the specified code for it.
-                                w.write("holds(" + e_fluent.getName() + ",T+1) :- ");
+                                w.write("holds(" + e_fluent.getName() + ",T+1) :- \n");
                                 for(Fluent s_Fluent2: s1.getFluents()) {
-                                    w.write("holds(" + s_Fluent2.getName() + ",T),\n");
+                                    w.write("           holds(" + s_Fluent2.getName() + ",T),\n");
                                 }
-                                w.write("occurs(" + a.getName() + ",T).\n\n");
+                                w.write("           occurs(" + a.getName() + ",T).\n\n");
                             }
                         }
                     }
