@@ -6,13 +6,14 @@ import java.util.UUID;
 
 /**
  * Created by CSZ on 14.06.2017.
+ * Our original graph contains vertices. These vertices define actions which are
+ * taken by the corresponding workflow.
  */
 public class Vertex {
     private String id;
     private String name;
     private List<Edge> outgoingEdges;
     private List<Edge> incomingEdges;
-    public boolean vertexIsAction = false;
 
     public Vertex(UUID id) {
         this.id = id.toString();
@@ -50,15 +51,5 @@ public class Vertex {
 
     public String getName() {
         return name;
-    }
-
-    public boolean IsAction(){ return vertexIsAction; }
-
-    public List<Vertex> getPredecessors() {
-        List<Vertex> result = new ArrayList<>();
-        for(Edge e: this.getIncomingEdges()){
-            result.add(e.getStart());
-        }
-        return result;
     }
 }

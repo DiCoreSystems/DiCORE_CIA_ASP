@@ -33,16 +33,11 @@ public class WorkflowGraphTest {
 
         Vertex v1 = new Vertex(UUID.randomUUID(), "start");
         Vertex v2 = new Vertex(UUID.randomUUID(), "POI");
-        v2.vertexIsAction  = true;
         Vertex v3 = new Vertex(UUID.randomUUID(), "GPSCoord");
-        v3.vertexIsAction  = true;
         Vertex v4 = new Vertex(UUID.randomUUID(), "chooseMapType");
         Vertex v5 = new Vertex(UUID.randomUUID(), "GeoMap");
-        v5.vertexIsAction  = true;
         Vertex v6 = new Vertex(UUID.randomUUID(), "PolMap");
-        v6.vertexIsAction = true;
         Vertex v7 = new Vertex(UUID.randomUUID(), "extractRelevantData");
-        v7.vertexIsAction = true;
         Vertex v8 = new Vertex(UUID.randomUUID(), "showData");
 
         graph.addVertex(v1);
@@ -95,18 +90,18 @@ public class WorkflowGraphTest {
     public void ParserTest(){
         File f = null;
         FileReader fr;
+        String configPath = "";
         try {
             fr = new FileReader(configFile);
             BufferedReader r = new BufferedReader(fr);
-            String configPath = r.readLine();
-            f = new File(configPath + "/domains-test.lp");
+            configPath = r.readLine();
+            f = new File("new.lp");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
         ClingoParser parser = new ClingoParser();
         assertNotNull(f);
-        assertTrue(parser.run(f));
+        assertTrue(parser.run(f, configPath));
     }
 }

@@ -2,6 +2,8 @@ package transDiagram;
 
 /**
  * Created by CSZ on 30.05.2017.
+ * A fluent stand for a status of each action. A negated fluent means that the action has not
+ * been completed yet. The positive value states the opposite (obviously)
  */
 public class Fluent {
     private final String name;
@@ -15,7 +17,7 @@ public class Fluent {
     public Fluent(String name){
         this.name = name;
         this.value = true;
-        this.negation = new Fluent("-" + name, false, this);
+        this.negation = new Fluent(name, false, this);
     }
 
     public Fluent(String name, boolean value, Fluent negation){
