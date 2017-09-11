@@ -73,17 +73,13 @@ public class WorkflowGraphTest {
 
         t.createASPCode();
 
-        /*assertEquals(3, t.getStates().size());
-        assertEquals(2, t.getActions().size());
-        assertEquals(3, t.getFluents().size());
-
-        assertEquals(2, t.getStates().get(0).getActions().size());
-        assertEquals(0, t.getStates().get(1).getActions().size());
-        assertEquals(0, t.getStates().get(2).getActions().size());
+        assertEquals(7, t.getStates().size());
+        assertEquals(7, t.getActions().size());
+        assertEquals(7, t.getFluents().size());
 
         for (State s: t.getStates()){
-            assertEquals(3, s.getFluents().size());
-        }*/
+            assertEquals(7, s.getFluents().size());
+        }
     }
 
     @Test

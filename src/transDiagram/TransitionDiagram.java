@@ -102,9 +102,9 @@ public class TransitionDiagram {
                 // CWA FOR ACTIONS
                 w.write("-occurs(" + a.getName() +",I) :-" +
                         " not occurs(" + a.getName() + ",I), step(I).\n");
-            }
 
-            w.write("\n");
+                w.write("\n");
+            }
 
             // Step 3: Get all Fluents from all starting states
             // and define their holds-Attribute for timestamp 0.
@@ -121,9 +121,17 @@ public class TransitionDiagram {
             w.write("\n");
 
             int i = 0;
-            List<State> statesToVisit = new ArrayList<>(startingStates);
+            List<State> statesToVisit = new ArrayList<>();
             List<State> nextVisit = new ArrayList<>();
             List<State> visitedStates = new ArrayList<>();
+
+            for(State startState: startingStates){
+                for(Action startAction: startState.getOutgoingActions()){
+                    statesToVisit.add(startAction.getEndState());
+                }
+                states.remove(startState);
+            }
+
             while(true){
                 for(State state: statesToVisit){
                     if(visitedStates.contains(state)){
@@ -148,6 +156,8 @@ public class TransitionDiagram {
                     }
 
                     visitedStates.add(state);
+
+                    w.write("occurs(do" + state.getName() + "," + i + ").\n\n");
                 }
 
                 if(nextVisit.isEmpty()){
@@ -159,7 +169,6 @@ public class TransitionDiagram {
                 }
 
                 nextVisit.clear();
-
                 i++;
             }
 

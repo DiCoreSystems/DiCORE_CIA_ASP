@@ -24,20 +24,12 @@ public class WorkflowGraph extends Graph {
     List<State> states = new ArrayList();
     List<Action> actions = new ArrayList();
     Vertex startingVertex = null;
-    int choiceNR = 1;
-    int timeStep = 0;
 
     public WorkflowGraph(List<Vertex> vertices, List<Edge> edges){
         super(vertices, edges);
     }
 
     public TransitionDiagram translate() {
-
-
-        // For this example I'm going to assume that our original vertices stand
-        // first for States, then an Action, then a State again, and so on...
-
-        //This while loop categorizes every vertex in our original graph.
 
         Queue<Vertex> verticesToCheck = new LinkedBlockingQueue<>();
         verticesToCheck.add(this.getVertices().get(0));
@@ -91,17 +83,14 @@ public class WorkflowGraph extends Graph {
 
                 // Find the corresponding state of our vertex.
                 State currentState = checkForName(currentVertex.getName());
+                if(checkForName(nextVertex.getName()) == null){
+                    newState = new State(UUID.randomUUID(), nextVertex.getName(), newFluents);
+                    states.add(newState);
 
-                for(Edge out: nextVertex.getOutgoingEdges()){
-                    if(checkForName(nextVertex.getName()) == null){
-                        newState = new State(UUID.randomUUID(), nextVertex.getName(), newFluents);
-                        states.add(newState);
-
-                        Action a = new Action(UUID.randomUUID(), currentState, newState, "do" + nextVertex.getName());
-                        actions.add(a);
-                        currentState.addOutgoingAction(a);
-                        newState.addIngoingAction(a);
-                    }
+                    Action a = new Action(UUID.randomUUID(), currentState, newState, "do" + nextVertex.getName());
+                    actions.add(a);
+                    currentState.addOutgoingAction(a);
+                    newState.addIngoingAction(a);
                 }
             }
             visitedVertices.add(currentVertex);
