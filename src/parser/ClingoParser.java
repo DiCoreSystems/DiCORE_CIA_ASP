@@ -39,7 +39,10 @@ public class ClingoParser {
 
             if(message.contains("UNSATISFIABLE") || message.contains("parsing failed") ||
                     message.contains("UNKNOWN")) {
-                // TODO: Discard the change.
+                // TODO: 1. Check if logic2 and logic1 exists.
+                // TODO: 2. If logic2 exists, overwrite it with logic1.
+                // TODO: 3. IF logic1 exists, overwrite it with current.
+                // TODO: 4. In an case, overwrite current with new.
                 return false;
             }
         } catch (Exception e) {

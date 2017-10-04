@@ -27,8 +27,7 @@ public class WorkflowGraphTest {
     private Graph graph;
     private final File configFile = new File("config.txt");
 
-    @Before
-    public void GraphSetUp(){
+    public void Graph1SetUp(){
         graph = new Graph();
 
         Vertex v1 = new Vertex(UUID.randomUUID(), "start");
@@ -64,9 +63,81 @@ public class WorkflowGraphTest {
         }
     }
 
+    public void Graph2SetUp(){
+        graph = new Graph();
+
+        Vertex v1 = new Vertex(UUID.randomUUID(), "start");
+        Vertex v2 = new Vertex(UUID.randomUUID(), "POI");
+        Vertex v3 = new Vertex(UUID.randomUUID(), "GPSCoord");
+        Vertex v4 = new Vertex(UUID.randomUUID(), "chooseMapType");
+        Vertex v5 = new Vertex(UUID.randomUUID(), "GeoMap");
+        Vertex v6 = new Vertex(UUID.randomUUID(), "PolMap");
+        Vertex v7 = new Vertex(UUID.randomUUID(), "extractRelevantData");
+        Vertex v8 = new Vertex(UUID.randomUUID(), "showData");
+
+        graph.addVertex(v1);
+        graph.addVertex(v2);
+        graph.addVertex(v3);
+        graph.addVertex(v4);
+        graph.addVertex(v5);
+        graph.addVertex(v6);
+        graph.addVertex(v7);
+        graph.addVertex(v8);
+
+        graph.addEdge(new Edge(UUID.randomUUID(), v1, v2));
+        graph.addEdge(new Edge(UUID.randomUUID(), v2, v3));
+        graph.addEdge(new Edge(UUID.randomUUID(), v3, v4));
+        graph.addEdge(new Edge(UUID.randomUUID(), v4, v5));
+        graph.addEdge(new Edge(UUID.randomUUID(), v4, v6));
+        graph.addEdge(new Edge(UUID.randomUUID(), v5, v7));
+        graph.addEdge(new Edge(UUID.randomUUID(), v6, v7));
+        graph.addEdge(new Edge(UUID.randomUUID(), v7, v8));
+
+        for(Edge e: graph.getEdges()){
+            e.getStart().addOutgoingEdge(e);
+            e.getEnd().addIncomingEdge(e);
+        }
+    }
+
+    public void Graph3SetUp(){
+        graph = new Graph();
+
+        Vertex v1 = new Vertex(UUID.randomUUID(), "start");
+        Vertex v2 = new Vertex(UUID.randomUUID(), "Step1");
+        Vertex v3 = new Vertex(UUID.randomUUID(), "Sept2A");
+        Vertex v4 = new Vertex(UUID.randomUUID(), "Step2B");
+        Vertex v5 = new Vertex(UUID.randomUUID(), "Step3A");
+        Vertex v6 = new Vertex(UUID.randomUUID(), "Step3B");
+        Vertex v7 = new Vertex(UUID.randomUUID(), "Step4A");
+        Vertex v8 = new Vertex(UUID.randomUUID(), "Step4B");
+
+        graph.addVertex(v1);
+        graph.addVertex(v2);
+        graph.addVertex(v3);
+        graph.addVertex(v4);
+        graph.addVertex(v5);
+        graph.addVertex(v6);
+        graph.addVertex(v7);
+        graph.addVertex(v8);
+
+        graph.addEdge(new Edge(UUID.randomUUID(), v1, v2));
+        graph.addEdge(new Edge(UUID.randomUUID(), v2, v3));
+        graph.addEdge(new Edge(UUID.randomUUID(), v2, v4));
+        graph.addEdge(new Edge(UUID.randomUUID(), v3, v5));
+        graph.addEdge(new Edge(UUID.randomUUID(), v4, v6));
+        graph.addEdge(new Edge(UUID.randomUUID(), v5, v7));
+        graph.addEdge(new Edge(UUID.randomUUID(), v6, v8));
+
+        for(Edge e: graph.getEdges()){
+            e.getStart().addOutgoingEdge(e);
+            e.getEnd().addIncomingEdge(e);
+        }
+    }
 
     @Test
     public void WorkflowGraphTest(){
+        Graph1SetUp();
+
         WorkflowGraph workflowGraph = new WorkflowGraph(graph.getVertices(), graph.getEdges());
 
         TransitionDiagram t = workflowGraph.translate();

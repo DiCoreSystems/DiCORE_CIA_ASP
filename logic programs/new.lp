@@ -1,73 +1,52 @@
 #const n = 8.
 step(0..n).
 
-fluent(inertial,POI).
 holds(POI,I+1) :- 
-           fluent(inertial,POI), 
            holds(POI,I),
            not -holds(POI,I+1), step(I).
 -holds(POI,I+1) :- 
-           fluent(inertial,POI), 
            -holds(POI,I),
            not holds(POI,I+1), step(I).
 
-fluent(inertial,GPSCoord).
 holds(GPSCoord,I+1) :- 
-           fluent(inertial,GPSCoord), 
            holds(GPSCoord,I),
            not -holds(GPSCoord,I+1), step(I).
 -holds(GPSCoord,I+1) :- 
-           fluent(inertial,GPSCoord), 
            -holds(GPSCoord,I),
            not holds(GPSCoord,I+1), step(I).
 
-fluent(inertial,chooseMapType).
 holds(chooseMapType,I+1) :- 
-           fluent(inertial,chooseMapType), 
            holds(chooseMapType,I),
            not -holds(chooseMapType,I+1), step(I).
 -holds(chooseMapType,I+1) :- 
-           fluent(inertial,chooseMapType), 
            -holds(chooseMapType,I),
            not holds(chooseMapType,I+1), step(I).
 
-fluent(inertial,GeoMap).
 holds(GeoMap,I+1) :- 
-           fluent(inertial,GeoMap), 
            holds(GeoMap,I),
            not -holds(GeoMap,I+1), step(I).
 -holds(GeoMap,I+1) :- 
-           fluent(inertial,GeoMap), 
            -holds(GeoMap,I),
            not holds(GeoMap,I+1), step(I).
 
-fluent(inertial,PolMap).
 holds(PolMap,I+1) :- 
-           fluent(inertial,PolMap), 
            holds(PolMap,I),
            not -holds(PolMap,I+1), step(I).
 -holds(PolMap,I+1) :- 
-           fluent(inertial,PolMap), 
            -holds(PolMap,I),
            not holds(PolMap,I+1), step(I).
 
-fluent(inertial,extractRelevantData).
 holds(extractRelevantData,I+1) :- 
-           fluent(inertial,extractRelevantData), 
            holds(extractRelevantData,I),
            not -holds(extractRelevantData,I+1), step(I).
 -holds(extractRelevantData,I+1) :- 
-           fluent(inertial,extractRelevantData), 
            -holds(extractRelevantData,I),
            not holds(extractRelevantData,I+1), step(I).
 
-fluent(inertial,showData).
 holds(showData,I+1) :- 
-           fluent(inertial,showData), 
            holds(showData,I),
            not -holds(showData,I+1), step(I).
 -holds(showData,I+1) :- 
-           fluent(inertial,showData), 
            -holds(showData,I),
            not holds(showData,I+1), step(I).
 

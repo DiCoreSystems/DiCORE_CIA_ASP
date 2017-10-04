@@ -61,32 +61,27 @@ public class TransitionDiagram {
             w.write("\n");
 
             for(Fluent fluent: fluents){
-                String name;
-                if(fluent.getValue()){
-                    name = fluent.getName();
-                } else {
-                    name = fluent.getNegation().getName();
-                }
+                String name = fluent.getName();
 
                 if(fluent.isInertial()){
-                    w.write("fluent(inertial," + name + ").\n");
+                    //w.write("inertial(" + name + ").\n");
 
                     // INERTIA AXIOM FOR FLUENTS
                     w.write("holds(" + name + ",I+1) :- \n" +
-                            "           fluent(inertial," + name + "), \n" +
+                           // "           inertial(" + name + "), \n" +
                             "           holds(" + name + ",I),\n" +
                             "           not -holds(" + name + ",I+1), step(I).\n");
 
                     w.write("-holds(" + name + ",I+1) :- \n" +
-                            "           fluent(inertial," + name + "), \n" +
+                           // "           inertial(" + name + "), \n" +
                             "           -holds(" + name + ",I),\n" +
                             "           not holds(" + name + ",I+1), step(I).\n");
                 } else {
-                    w.write("fluent(defined," + name + ").\n");
+                    w.write("defined(" + name + ").\n");
 
                     // CWA FOR FLUENTS
                     w.write("-holds(" + name + ",I+1) :- \n" +
-                            "           fluent(defined," + name + "), \n" +
+                            "           defined{" + name + "), \n" +
                             "           not holds(" + name + ",I).\n");
                 }
 
