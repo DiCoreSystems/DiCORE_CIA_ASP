@@ -31,11 +31,11 @@ public class WorkflowGraphTest {
         graph = new Graph();
 
         Vertex v1 = new Vertex(UUID.randomUUID(), "start");
-        Vertex v2 = new Vertex(UUID.randomUUID(), "POI");
-        Vertex v3 = new Vertex(UUID.randomUUID(), "GPSCoord");
+        Vertex v2 = new Vertex(UUID.randomUUID(), "poi");
+        Vertex v3 = new Vertex(UUID.randomUUID(), "gpsCoord");
         Vertex v4 = new Vertex(UUID.randomUUID(), "chooseMapType");
-        Vertex v5 = new Vertex(UUID.randomUUID(), "GeoMap");
-        Vertex v6 = new Vertex(UUID.randomUUID(), "PolMap");
+        Vertex v5 = new Vertex(UUID.randomUUID(), "geoMap");
+        Vertex v6 = new Vertex(UUID.randomUUID(), "polMap");
         Vertex v7 = new Vertex(UUID.randomUUID(), "extractRelevantData");
         Vertex v8 = new Vertex(UUID.randomUUID(), "showData");
 
@@ -67,11 +67,11 @@ public class WorkflowGraphTest {
         graph = new Graph();
 
         Vertex v1 = new Vertex(UUID.randomUUID(), "start");
-        Vertex v2 = new Vertex(UUID.randomUUID(), "POI");
-        Vertex v3 = new Vertex(UUID.randomUUID(), "GPSCoord");
+        Vertex v2 = new Vertex(UUID.randomUUID(), "poi");
+        Vertex v3 = new Vertex(UUID.randomUUID(), "gpsCoord");
         Vertex v4 = new Vertex(UUID.randomUUID(), "chooseMapType");
-        Vertex v5 = new Vertex(UUID.randomUUID(), "GeoMap");
-        Vertex v6 = new Vertex(UUID.randomUUID(), "PolMap");
+        Vertex v5 = new Vertex(UUID.randomUUID(), "geoMap");
+        Vertex v6 = new Vertex(UUID.randomUUID(), "polMap");
         Vertex v7 = new Vertex(UUID.randomUUID(), "extractRelevantData");
         Vertex v8 = new Vertex(UUID.randomUUID(), "showData");
 
@@ -103,13 +103,13 @@ public class WorkflowGraphTest {
         graph = new Graph();
 
         Vertex v1 = new Vertex(UUID.randomUUID(), "start");
-        Vertex v2 = new Vertex(UUID.randomUUID(), "Step1");
-        Vertex v3 = new Vertex(UUID.randomUUID(), "Sept2A");
-        Vertex v4 = new Vertex(UUID.randomUUID(), "Step2B");
-        Vertex v5 = new Vertex(UUID.randomUUID(), "Step3A");
-        Vertex v6 = new Vertex(UUID.randomUUID(), "Step3B");
-        Vertex v7 = new Vertex(UUID.randomUUID(), "Step4A");
-        Vertex v8 = new Vertex(UUID.randomUUID(), "Step4B");
+        Vertex v2 = new Vertex(UUID.randomUUID(), "step1");
+        Vertex v3 = new Vertex(UUID.randomUUID(), "step2A");
+        Vertex v4 = new Vertex(UUID.randomUUID(), "step2B");
+        Vertex v5 = new Vertex(UUID.randomUUID(), "step3A");
+        Vertex v6 = new Vertex(UUID.randomUUID(), "step3B");
+        Vertex v7 = new Vertex(UUID.randomUUID(), "step4A");
+        Vertex v8 = new Vertex(UUID.randomUUID(), "step4B");
 
         graph.addVertex(v1);
         graph.addVertex(v2);
@@ -135,7 +135,7 @@ public class WorkflowGraphTest {
     }
 
     @Test
-    public void WorkflowGraphTest(){
+    public void TranslationTest(){
         Graph1SetUp();
 
         WorkflowGraph workflowGraph = new WorkflowGraph(graph.getVertices(), graph.getEdges());
