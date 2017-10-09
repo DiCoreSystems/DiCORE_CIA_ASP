@@ -1,69 +1,90 @@
-#const n = 8.
+#const n = 7.
 step(0..n).
 
-holds(POI,I+1) :- 
-           holds(POI,I),
-           not -holds(POI,I+1), step(I).
--holds(POI,I+1) :- 
-           -holds(POI,I),
-           not holds(POI,I+1), step(I).
+inertial(poi).
+holds(poi,I+1) :- 
+           inertial(poi), 
+           holds(poi,I),
+           not -holds(poi,I+1), step(I).
+-holds(poi,I+1) :- 
+           inertial(poi), 
+           -holds(poi,I),
+           not holds(poi,I+1), step(I).
 
-holds(GPSCoord,I+1) :- 
-           holds(GPSCoord,I),
-           not -holds(GPSCoord,I+1), step(I).
--holds(GPSCoord,I+1) :- 
-           -holds(GPSCoord,I),
-           not holds(GPSCoord,I+1), step(I).
+inertial(gpsCoord).
+holds(gpsCoord,I+1) :- 
+           inertial(gpsCoord), 
+           holds(gpsCoord,I),
+           not -holds(gpsCoord,I+1), step(I).
+-holds(gpsCoord,I+1) :- 
+           inertial(gpsCoord), 
+           -holds(gpsCoord,I),
+           not holds(gpsCoord,I+1), step(I).
 
+inertial(chooseMapType).
 holds(chooseMapType,I+1) :- 
+           inertial(chooseMapType), 
            holds(chooseMapType,I),
            not -holds(chooseMapType,I+1), step(I).
 -holds(chooseMapType,I+1) :- 
+           inertial(chooseMapType), 
            -holds(chooseMapType,I),
            not holds(chooseMapType,I+1), step(I).
 
-holds(GeoMap,I+1) :- 
-           holds(GeoMap,I),
-           not -holds(GeoMap,I+1), step(I).
--holds(GeoMap,I+1) :- 
-           -holds(GeoMap,I),
-           not holds(GeoMap,I+1), step(I).
+inertial(geoMap).
+holds(geoMap,I+1) :- 
+           inertial(geoMap), 
+           holds(geoMap,I),
+           not -holds(geoMap,I+1), step(I).
+-holds(geoMap,I+1) :- 
+           inertial(geoMap), 
+           -holds(geoMap,I),
+           not holds(geoMap,I+1), step(I).
 
-holds(PolMap,I+1) :- 
-           holds(PolMap,I),
-           not -holds(PolMap,I+1), step(I).
--holds(PolMap,I+1) :- 
-           -holds(PolMap,I),
-           not holds(PolMap,I+1), step(I).
+inertial(polMap).
+holds(polMap,I+1) :- 
+           inertial(polMap), 
+           holds(polMap,I),
+           not -holds(polMap,I+1), step(I).
+-holds(polMap,I+1) :- 
+           inertial(polMap), 
+           -holds(polMap,I),
+           not holds(polMap,I+1), step(I).
 
+inertial(extractRelevantData).
 holds(extractRelevantData,I+1) :- 
+           inertial(extractRelevantData), 
            holds(extractRelevantData,I),
            not -holds(extractRelevantData,I+1), step(I).
 -holds(extractRelevantData,I+1) :- 
+           inertial(extractRelevantData), 
            -holds(extractRelevantData,I),
            not holds(extractRelevantData,I+1), step(I).
 
+inertial(showData).
 holds(showData,I+1) :- 
+           inertial(showData), 
            holds(showData,I),
            not -holds(showData,I+1), step(I).
 -holds(showData,I+1) :- 
+           inertial(showData), 
            -holds(showData,I),
            not holds(showData,I+1), step(I).
 
-action(doPOI).
--occurs(doPOI,I) :- not occurs(doPOI,I), step(I).
+action(dopoi).
+-occurs(dopoi,I) :- not occurs(dopoi,I), step(I).
 
-action(doGPSCoord).
--occurs(doGPSCoord,I) :- not occurs(doGPSCoord,I), step(I).
+action(dogpsCoord).
+-occurs(dogpsCoord,I) :- not occurs(dogpsCoord,I), step(I).
 
 action(dochooseMapType).
 -occurs(dochooseMapType,I) :- not occurs(dochooseMapType,I), step(I).
 
-action(doGeoMap).
--occurs(doGeoMap,I) :- not occurs(doGeoMap,I), step(I).
+action(dogeoMap).
+-occurs(dogeoMap,I) :- not occurs(dogeoMap,I), step(I).
 
-action(doPolMap).
--occurs(doPolMap,I) :- not occurs(doPolMap,I), step(I).
+action(dopolMap).
+-occurs(dopolMap,I) :- not occurs(dopolMap,I), step(I).
 
 action(doextractRelevantData).
 -occurs(doextractRelevantData,I) :- not occurs(doextractRelevantData,I), step(I).
@@ -71,51 +92,50 @@ action(doextractRelevantData).
 action(doshowData).
 -occurs(doshowData,I) :- not occurs(doshowData,I), step(I).
 
--holds(POI,0).
--holds(GPSCoord,0).
+-holds(poi,0).
+-holds(gpsCoord,0).
 -holds(chooseMapType,0).
--holds(GeoMap,0).
--holds(PolMap,0).
+-holds(geoMap,0).
+-holds(polMap,0).
 -holds(extractRelevantData,0).
 -holds(showData,0).
 
-holds(POI,T+1) :- 
-           holds(start,T),
-          -holds(POI,T),
-           occurs(doPOI,T).
+holds(poi,T+1) :- 
+          -holds(poi,T),
+           occurs(dopoi,T).
 
-occurs(doPOI,0).
+occurs(dopoi,0).
 
-holds(GPSCoord,T+1) :- 
-           holds(POI,T),
-          -holds(GPSCoord,T),
-           occurs(doGPSCoord,T).
+holds(gpsCoord,T+1) :- 
+           holds(poi,T),
+          -holds(gpsCoord,T),
+           occurs(dogpsCoord,T).
 
-occurs(doGPSCoord,1).
+occurs(dogpsCoord,1).
 
 holds(chooseMapType,T+1) :- 
-           holds(GPSCoord,T),
+           holds(gpsCoord,T),
           -holds(chooseMapType,T),
            occurs(dochooseMapType,T).
 
 occurs(dochooseMapType,2).
 
-holds(GeoMap,T+1) :- 
+holds(geoMap,T+1) :- 
            holds(chooseMapType,T),
-          -holds(GeoMap,T),
-           occurs(doGeoMap,T).
+          -holds(geoMap,T),
+           occurs(dogeoMap,T).
 
-occurs(doGeoMap,3).
+occurs(dogeoMap,3).
 
-holds(PolMap,T+1) :- 
+holds(polMap,T+1) :- 
            holds(chooseMapType,T),
-          -holds(PolMap,T),
-           occurs(doPolMap,T).
+          -holds(polMap,T),
+           occurs(dopolMap,T).
 
-occurs(doPolMap,3).
+occurs(dopolMap,3).
 
 holds(extractRelevantData,T+1) :- 
-           holds(GeoMap,T),
+           holds(geoMap,T),
           -holds(extractRelevantData,T),
            occurs(doextractRelevantData,T).
 

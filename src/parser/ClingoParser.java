@@ -11,11 +11,11 @@ public class ClingoParser {
     // This class runs a given ASP program via command and checks the result output for errors.
     // If Clingo detects an error or the resulting logical program is not satisfiable,
     // all changes will be discarded and all changes are undone.
-    public boolean run(File targetFile, String configPath){
+    public boolean run(File targetFile){
         Runtime rt = Runtime.getRuntime();
 
         try {
-            Process exec = rt.exec("clingo-python " + targetFile + " domains-test.lp 0");
+            Process exec = rt.exec("clingo " + targetFile + " 0");
 
             StringBuilder s = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(exec.getInputStream(), "UTF-8"));

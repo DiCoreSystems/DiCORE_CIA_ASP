@@ -2,7 +2,6 @@ package transDiagram;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,7 +14,6 @@ public class TransitionDiagram {
     private final List<Action> actions;
     private final List<State> states;
     private final List<State> startingStates;
-    private final File configFile = new File("config.txt");
     private File f;
 
     public TransitionDiagram(List<Fluent> fluents, List<Action> actions, List<State> states,
@@ -28,25 +26,17 @@ public class TransitionDiagram {
 
     public File createASPCode(){
 
-        FileReader fr;
-        try {
-            fr = new FileReader(configFile);
-            BufferedReader r = new BufferedReader(fr);
-            String configPath = r.readLine();
-            f = new File(configPath + "/new.lp");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        f = new File("../ASP/logic programs/new.lp");
 
-//        if(!(f.exists() && !f.isDirectory())){
+        // TODO: Save the current new.lp in a new file in case something goes wrong.
+
+        if(!(f.exists() && !f.isDirectory())){
             try {
                 f.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//        }
-
-
+        }
 
         try {
             FileWriter w = new FileWriter(f);
@@ -64,16 +54,16 @@ public class TransitionDiagram {
                 String name = fluent.getName();
 
                 if(fluent.isInertial()){
-                    //w.write("inertial(" + name + ").\n");
+                    w.write("inertial(" + name + ").\n");
 
                     // INERTIA AXIOM FOR FLUENTS
                     w.write("holds(" + name + ",I+1) :- \n" +
-                           // "           inertial(" + name + "), \n" +
+                            "           inertial(" + name + "), \n" +
                             "           holds(" + name + ",I),\n" +
                             "           not -holds(" + name + ",I+1), step(I).\n");
 
                     w.write("-holds(" + name + ",I+1) :- \n" +
-                           // "           inertial(" + name + "), \n" +
+                            "           inertial(" + name + "), \n" +
                             "           -holds(" + name + ",I),\n" +
                             "           not holds(" + name + ",I+1), step(I).\n");
                 } else {
@@ -140,7 +130,13 @@ public class TransitionDiagram {
                     } else {
                         for(Action a: state.getIngoingActions()){
                             w.write("holds(" + state.getName() + ",T+1) :- \n");
-                            w.write("           holds(" + a.getStartState().getName() + ",T),\n");
+
+                            // The state "start" is merely used as an orientation where the workflow starts.
+                            // It has no further impact on the workflow.
+                            if(!a.getStartState().getName().equals("start")){
+                                w.write("           holds(" + a.getStartState().getName() + ",T),\n");
+                            }
+
                             w.write("          -holds(" + state.getName() + ",T),\n");
                             w.write("           occurs(do" + state.getName() + ",T).\n\n");
                         }

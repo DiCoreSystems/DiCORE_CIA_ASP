@@ -4,17 +4,12 @@ import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 import graph.WorkflowGraph;
-import org.junit.Before;
 import org.junit.Test;
 import parser.ClingoParser;
 import transDiagram.State;
 import transDiagram.TransitionDiagram;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -25,7 +20,6 @@ import static org.junit.Assert.*;
 public class WorkflowGraphTest {
 
     private Graph graph;
-    private final File configFile = new File("config.txt");
 
     public void Graph1SetUp(){
         graph = new Graph();
@@ -155,20 +149,11 @@ public class WorkflowGraphTest {
 
     @Test
     public void ParserTest(){
-        File f = null;
-        FileReader fr;
-        String configPath = "";
-        try {
-            fr = new FileReader(configFile);
-            BufferedReader r = new BufferedReader(fr);
-            configPath = r.readLine();
-            f = new File("new.lp");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        File f;
+        f = new File("C:/Users/Jan/Documents/Arbeit/ASP/logic programs/new.lp");
 
         ClingoParser parser = new ClingoParser();
         assertNotNull(f);
-        assertTrue(parser.run(f, configPath));
+        assertTrue(parser.run(f));
     }
 }

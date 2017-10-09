@@ -1,8 +1,5 @@
 package transDiagram;
 
-import graph.Edge;
-import graph.Vertex;
-
 import java.util.UUID;
 
 /**
@@ -30,15 +27,7 @@ public class Action{
         return startState;
     }
 
-    public void setStartState(State startState) {
-        this.startState = startState;
-    }
-
     public State getEndState() {
         return endState;
-    }
-
-    public void setEndState(State endState) {
-        this.endState = endState;
     }
 }

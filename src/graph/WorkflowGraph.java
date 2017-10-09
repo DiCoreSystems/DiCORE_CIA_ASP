@@ -69,7 +69,7 @@ public class WorkflowGraph extends Graph {
                 if(nextVertex == null)
                     break;
 
-                //Find out which fluent is changed by our action.
+                // Find out which fluent is changed by our action.
                 List<Fluent> newFluents = new ArrayList<>();
                 for(Fluent f: fluents){
                     // This one needs improvement. Currently we're connecting a action Vertex with
@@ -99,6 +99,7 @@ public class WorkflowGraph extends Graph {
         //TODO: A graph can have more than one entry point.
         List<State> start = new ArrayList<>();
         start.add(startState);
+        states.remove(startState);
 
         TransitionDiagram t = new TransitionDiagram(fluents, actions, states, start);
 

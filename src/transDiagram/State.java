@@ -1,7 +1,5 @@
 package transDiagram;
 
-import graph.Vertex;
-
 import java.util.*;
 
 /**
@@ -18,7 +16,6 @@ public class State {
 
     public State(UUID id, List<Fluent> fluents){
         this.id = id;
-        this.name = name;
         this.fluents = fluents;
     }
 
