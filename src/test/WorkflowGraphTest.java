@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 public class WorkflowGraphTest {
 
     private Graph graph;
+    private final String configPath = "\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/new.lp\"";
 
     public void Graph1SetUp(){
         graph = new Graph();
@@ -150,7 +151,7 @@ public class WorkflowGraphTest {
     @Test
     public void ParserTest(){
         File f;
-        f = new File("C:/Users/Jan/Documents/Arbeit/ASP/logic programs/new.lp");
+        f = new File(configPath);
 
         ClingoParser parser = new ClingoParser();
         assertNotNull(f);

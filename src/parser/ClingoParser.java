@@ -17,19 +17,19 @@ public class ClingoParser {
         try {
             Process exec = rt.exec("clingo " + targetFile + " 0");
 
-            StringBuilder s = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(exec.getInputStream(), "UTF-8"));
             while(true){
                 String str = br.readLine();
                 if(str != null){
-                    s.append(str + "\n");
+                    stringBuilder.append(str + "\n");
                 } else {
                     break;
                 }
             }
             br.close();
 
-            String message = s.toString();
+            String message = stringBuilder.toString();
 
             System.out.println(message);
 
