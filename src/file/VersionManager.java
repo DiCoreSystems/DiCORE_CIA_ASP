@@ -10,19 +10,24 @@ import java.io.*;
  * nothing will be saved and all changes (if there are any) will be discarded.
  */
 public class VersionManager {
-    private final String file1 = "\"./logic programs/current.lp\"";
-    private final String file2 = "\"./logic programs/logic1.lp\"";
-    private final String file3 = "\"./logic programs/logic2.lp\"";
-    private final String file4 = "\"./logic programs/logic3.lp\"";
+    private final String file1 = "./logic programs/current.lp";
+    private final String file2 = "./logic programs/previous1.lp";
+    private final String file3 = "./logic programs/previous2.lp";
+    private final String file4 = "./logic programs/previous3.lp";
 
     public void saveNewFile(File newFile) throws IOException {
+        System.out.println("Was ist los: " + new File(newFile.getPath().replace("\"", "")).exists());
         overwriteFiles(file3, file4);
         overwriteFiles(file2, file3);
         overwriteFiles(file1, file2);
-        overwriteFiles(newFile.getAbsolutePath(), file1);
+        overwriteFiles(newFile.getPath().replace("\"", ""), file1);
     }
 
     private void overwriteFiles(String newFile, String oldFile) throws IOException {
+        if(!new File(newFile).exists() && !new File(oldFile).exists()) {
+            System.out.println("Beide Dateien existieren nicht.");
+            return;
+        }
         FileWriter fw;
         BufferedReader bufferedReader;
 

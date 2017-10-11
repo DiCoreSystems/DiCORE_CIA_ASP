@@ -1,5 +1,7 @@
 package parser;
 
+import file.VersionManager;
+
 import java.io.*;
 
 /**
@@ -39,12 +41,11 @@ public class ClingoParser {
 
             if(message.contains("UNSATISFIABLE") || message.contains("parsing failed") ||
                     message.contains("UNKNOWN")) {
-                // TODO: 1. Check if logic2 and logic1 exists.
-                // TODO: 2. If logic2 exists, overwrite it with logic1.
-                // TODO: 3. IF logic1 exists, overwrite it with current.
-                // TODO: 4. In an case, overwrite current with new.
                 return false;
             }
+
+            VersionManager manager = new VersionManager();
+            manager.saveNewFile(targetFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
