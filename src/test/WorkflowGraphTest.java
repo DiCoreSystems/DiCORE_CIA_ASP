@@ -1,5 +1,6 @@
 package test;
 
+import file.VersionManager;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
@@ -10,6 +11,7 @@ import transDiagram.State;
 import transDiagram.TransitionDiagram;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -155,6 +157,13 @@ public class WorkflowGraphTest {
 
         ClingoParser parser = new ClingoParser();
         assertNotNull(f);
-        assertTrue(parser.run(f));
+        assertNotNull(parser.run(f));
+
+        VersionManager manager = new VersionManager();
+        try {
+            manager.saveNewFile(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
