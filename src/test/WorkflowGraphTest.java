@@ -10,8 +10,9 @@ import parser.ClingoParser;
 import transDiagram.State;
 import transDiagram.TransitionDiagram;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -23,6 +24,7 @@ public class WorkflowGraphTest {
 
     private Graph graph;
     private final String configPath = "\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/new.lp\"";
+    private final File currentFile = new File("\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/current.lp\"");
 
     public void Graph1SetUp(){
         graph = new Graph();
@@ -157,13 +159,63 @@ public class WorkflowGraphTest {
 
         ClingoParser parser = new ClingoParser();
         assertNotNull(f);
-        assertNotNull(parser.run(f));
+        assertTrue(parser.run(f));
 
-        VersionManager manager = new VersionManager();
+        String messageNew = parser.getUniverse(f);
+        assertNotNull(messageNew);
+
+        String messageOld = parser.getUniverse(currentFile);
+        assertNotNull(messageOld);
+
+        StringReader stringReaderNew = new StringReader(messageNew);
+        StringReader stringReaderOld = new StringReader(messageOld);
+
+        BufferedReader brNew = new BufferedReader(stringReaderNew);
+        BufferedReader brOld = new BufferedReader(stringReaderOld);
+        List<String> linesOfNew = new ArrayList<>();
+        List<String> linesOfOld = new ArrayList<>();
+
         try {
+            while(true){
+                String strNew = brNew.readLine();
+                String strOld = brOld.readLine();
+
+                if(strNew != null && strOld != null) {
+                    linesOfNew.add(strNew);
+                    linesOfOld.add(strOld);
+                } else {
+                    break;
+                }
+            }
+            brNew.close();
+            brOld.close();
+
+            compareTexts(linesOfOld, linesOfNew);
+
+            VersionManager manager = new VersionManager();
             manager.saveNewFile(f);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void compareTexts(List<String> linesOfOld, List<String> linesOfNew) {
+        if(linesOfNew.containsAll(linesOfOld)){
+            System.out.println("There are no changes in your new program. Save discarded.");
+            return;
+        }
+
+        /*linesOfOld.removeAll(linesOfNew);
+
+        System.out.println("These are the lines removed: ");
+        for(String s: linesOfOld){
+            System.out.println("    " + s);
+        }
+
+        linesOfNew.removeAll(linesOfOld);
+        System.out.println("These are the lines added: ");
+        for(String s: linesOfNew){
+            System.out.println("    " + s);
+        }*/
     }
 }
