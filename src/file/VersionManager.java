@@ -16,7 +16,6 @@ public class VersionManager {
     private final String file4 = "./logic programs/previous3.lp";
 
     public void saveNewFile(File newFile) throws IOException {
-        System.out.println("Was ist los: " + new File(newFile.getPath().replace("\"", "")).exists());
         overwriteFiles(file3, file4);
         overwriteFiles(file2, file3);
         overwriteFiles(file1, file2);

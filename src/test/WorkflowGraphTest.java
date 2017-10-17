@@ -67,7 +67,7 @@ public class WorkflowGraphTest {
 
         Vertex v1 = new Vertex(UUID.randomUUID(), "start");
         Vertex v2 = new Vertex(UUID.randomUUID(), "poi");
-        Vertex v3 = new Vertex(UUID.randomUUID(), "gpsCoord");
+        Vertex v3 = new Vertex(UUID.randomUUID(), "absolCoord");
         Vertex v4 = new Vertex(UUID.randomUUID(), "chooseMapType");
         Vertex v5 = new Vertex(UUID.randomUUID(), "geoMap");
         Vertex v6 = new Vertex(UUID.randomUUID(), "polMap");
@@ -135,7 +135,7 @@ public class WorkflowGraphTest {
 
     @Test
     public void TranslationTest(){
-        Graph1SetUp();
+        Graph2SetUp();
 
         WorkflowGraph workflowGraph = new WorkflowGraph(graph.getVertices(), graph.getEdges());
 
@@ -190,32 +190,47 @@ public class WorkflowGraphTest {
             brNew.close();
             brOld.close();
 
-            compareTexts(linesOfOld, linesOfNew);
+            getDifferences(linesOfOld, linesOfNew);
 
-            VersionManager manager = new VersionManager();
-            manager.saveNewFile(f);
+           // VersionManager manager = new VersionManager();
+           // manager.saveNewFile(f);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void compareTexts(List<String> linesOfOld, List<String> linesOfNew) {
+    private void getDifferences(List<String> linesOfOld, List<String> linesOfNew) {
+        List<String> removedLines = new ArrayList<>();
+        List<String> addedLines = new ArrayList<>();
+
         if(linesOfNew.containsAll(linesOfOld)){
             System.out.println("There are no changes in your new program. Save discarded.");
             return;
         }
 
-        /*linesOfOld.removeAll(linesOfNew);
+        for(String s: linesOfOld){
+            if(!linesOfNew.contains(s)){
+                removedLines.add(s);
+            }
+        }
+
+        for(String s: linesOfNew){
+            if(!linesOfOld.contains(s)){
+                addedLines.add(s);
+            }
+        }
 
         System.out.println("These are the lines removed: ");
-        for(String s: linesOfOld){
+        for(String s: removedLines){
             System.out.println("    " + s);
         }
 
-        linesOfNew.removeAll(linesOfOld);
+        System.out.println();
+        System.out.println();
+
         System.out.println("These are the lines added: ");
-        for(String s: linesOfNew){
+        for(String s: addedLines){
             System.out.println("    " + s);
-        }*/
+        }
     }
 }

@@ -11,15 +11,15 @@ holds(poi,I+1) :-
            -holds(poi,I),
            not holds(poi,I+1), step(I).
 
-inertial(gpsCoord).
-holds(gpsCoord,I+1) :- 
-           inertial(gpsCoord), 
-           holds(gpsCoord,I),
-           not -holds(gpsCoord,I+1), step(I).
--holds(gpsCoord,I+1) :- 
-           inertial(gpsCoord), 
-           -holds(gpsCoord,I),
-           not holds(gpsCoord,I+1), step(I).
+inertial(absolCoord).
+holds(absolCoord,I+1) :- 
+           inertial(absolCoord), 
+           holds(absolCoord,I),
+           not -holds(absolCoord,I+1), step(I).
+-holds(absolCoord,I+1) :- 
+           inertial(absolCoord), 
+           -holds(absolCoord,I),
+           not holds(absolCoord,I+1), step(I).
 
 inertial(chooseMapType).
 holds(chooseMapType,I+1) :- 
@@ -74,8 +74,8 @@ holds(showData,I+1) :-
 action(dopoi).
 -occurs(dopoi,I) :- not occurs(dopoi,I), step(I).
 
-action(dogpsCoord).
--occurs(dogpsCoord,I) :- not occurs(dogpsCoord,I), step(I).
+action(doabsolCoord).
+-occurs(doabsolCoord,I) :- not occurs(doabsolCoord,I), step(I).
 
 action(dochooseMapType).
 -occurs(dochooseMapType,I) :- not occurs(dochooseMapType,I), step(I).
@@ -93,7 +93,7 @@ action(doshowData).
 -occurs(doshowData,I) :- not occurs(doshowData,I), step(I).
 
 -holds(poi,0).
--holds(gpsCoord,0).
+-holds(absolCoord,0).
 -holds(chooseMapType,0).
 -holds(geoMap,0).
 -holds(polMap,0).
@@ -106,15 +106,15 @@ holds(poi,T+1) :-
 
 occurs(dopoi,0).
 
-holds(gpsCoord,T+1) :- 
+holds(absolCoord,T+1) :- 
            holds(poi,T),
-          -holds(gpsCoord,T),
-           occurs(dogpsCoord,T).
+          -holds(absolCoord,T),
+           occurs(doabsolCoord,T).
 
-occurs(dogpsCoord,1).
+occurs(doabsolCoord,1).
 
 holds(chooseMapType,T+1) :- 
-           holds(gpsCoord,T),
+           holds(absolCoord,T),
           -holds(chooseMapType,T),
            occurs(dochooseMapType,T).
 
