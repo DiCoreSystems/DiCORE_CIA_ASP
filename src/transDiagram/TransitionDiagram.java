@@ -54,24 +54,24 @@ public class TransitionDiagram {
                 String name = fluent.getName();
 
                 if(fluent.isInertial()){
-                    w.write("inertial(" + name + ").\n");
+                    w.write("n_fluent(inertial, " + name + ").\n");
 
                     // INERTIA AXIOM FOR FLUENTS
                     w.write("holds(" + name + ",I+1) :- \n" +
-                            "           inertial(" + name + "), \n" +
-                            "           holds(" + name + ",I),\n" +
-                            "           not -holds(" + name + ",I+1), step(I).\n");
+                            "           n_fluent(inertial, " + name + "), \n" +
+                            "           n_holds(" + name + ",I),\n" +
+                            "           not -n_holds(" + name + ",I+1), step(I).\n");
 
                     w.write("-holds(" + name + ",I+1) :- \n" +
-                            "           inertial(" + name + "), \n" +
-                            "           -holds(" + name + ",I),\n" +
-                            "           not holds(" + name + ",I+1), step(I).\n");
+                            "           n_fluent(inertial, " + name + "), \n" +
+                            "           -n_holds(" + name + ",I),\n" +
+                            "           not n_holds(" + name + ",I+1), step(I).\n");
                 } else {
-                    w.write("defined(" + name + ").\n");
+                    w.write("n_fluent(defined" + name + ").\n");
 
                     // CWA FOR FLUENTS
-                    w.write("-holds(" + name + ",I+1) :- \n" +
-                            "           defined{" + name + "), \n" +
+                    w.write("-n_holds(" + name + ",I+1) :- \n" +
+                            "           n_fluent(defined" + name + "), \n" +
                             "           not holds(" + name + ",I).\n");
                 }
 
@@ -82,11 +82,11 @@ public class TransitionDiagram {
 
             // DEFINITION OF ACTIONS.
             for(Action a: actions){
-                w.write("action(" + a.getName() +").\n");
+                w.write("n_action(" + a.getName() +").\n");
 
                 // CWA FOR ACTIONS
-                w.write("-occurs(" + a.getName() +",I) :-" +
-                        " not occurs(" + a.getName() + ",I), step(I).\n");
+                w.write("-n_occurs(" + a.getName() +",I) :-" +
+                        " not n_occurs(" + a.getName() + ",I), step(I).\n");
 
                 w.write("\n");
             }
@@ -96,9 +96,9 @@ public class TransitionDiagram {
             for(State start: startingStates){
                 for(Fluent fluent: start.getFluents()) {
                     if(fluent.getValue()){
-                        w.write("holds(" + fluent.getName() + ",0).\n");
+                        w.write("n_holds(" + fluent.getName() + ",0).\n");
                     } else {
-                        w.write("-holds(" + fluent.getName() + ",0).\n");
+                        w.write("-n_holds(" + fluent.getName() + ",0).\n");
                     }
                 }
             }
@@ -125,20 +125,20 @@ public class TransitionDiagram {
 
                     // Standard ASP Codeblock for each predecessor (causal law).
                     if(state.getIngoingActions().isEmpty()){
-                        w.write("holds(" + state.getName() + ",T+1) :- \n");
-                        w.write("           occurs(do" + state.getName() + ", T).\n\n");
+                        w.write("n_holds(" + state.getName() + ",T+1) :- \n");
+                        w.write("           n_occurs(do" + state.getName() + ", T).\n\n");
                     } else {
                         for(Action a: state.getIngoingActions()){
-                            w.write("holds(" + state.getName() + ",T+1) :- \n");
+                            w.write("n_holds(" + state.getName() + ",T+1) :- \n");
 
                             // The state "start" is merely used as an orientation where the workflow starts.
                             // It has no further impact on the workflow.
                             if(!a.getStartState().getName().equals("start")){
-                                w.write("           holds(" + a.getStartState().getName() + ",T),\n");
+                                w.write("           n_holds(" + a.getStartState().getName() + ",T),\n");
                             }
 
-                            w.write("          -holds(" + state.getName() + ",T),\n");
-                            w.write("           occurs(do" + state.getName() + ",T).\n\n");
+                            w.write("          -n_holds(" + state.getName() + ",T),\n");
+                            w.write("           n_occurs(do" + state.getName() + ",T).\n\n");
                         }
                     }
 
@@ -148,7 +148,7 @@ public class TransitionDiagram {
 
                     visitedStates.add(state);
 
-                    w.write("occurs(do" + state.getName() + "," + i + ").\n\n");
+                    w.write("n_occurs(do" + state.getName() + "," + i + ").\n\n");
                 }
 
                 if(nextVisit.isEmpty()){

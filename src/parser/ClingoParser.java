@@ -13,8 +13,10 @@ public class ClingoParser {
     // all changes will be discarded and all changes are undone.
 
     private final File domainsFile = new File("\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/domains-test.lp\"");
+    private final File diffFile = new File("\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/diff.lp\"");
+    private final File currentFile = new File("\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/current.lp\"");
 
-    public boolean run(File targetFile){
+    public boolean checkIfSatisfiable(File targetFile){
         Runtime rt = Runtime.getRuntime();
 
         try {
@@ -78,6 +80,35 @@ public class ClingoParser {
                         stringBuilder.append(str + "\n");
                     }
 
+                } else {
+                    break;
+                }
+            }
+            br.close();
+
+            String message = stringBuilder.toString();
+
+            System.out.println(message);
+
+            return message;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getDifferences(File targetFile){
+        Runtime rt = Runtime.getRuntime();
+
+        try {
+            Process exec = rt.exec("clingo-python " + targetFile + " " + currentFile + " " + diffFile +" 0");
+
+            StringBuilder stringBuilder = new StringBuilder();
+            BufferedReader br = new BufferedReader(new InputStreamReader(exec.getInputStream(), "UTF-8"));
+            while(true){
+                String str = br.readLine();
+                if(str != null){
+                    stringBuilder.append(str + "\n");
                 } else {
                     break;
                 }

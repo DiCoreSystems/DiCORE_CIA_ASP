@@ -24,7 +24,6 @@ public class WorkflowGraphTest {
 
     private Graph graph;
     private final String configPath = "\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/new.lp\"";
-    private final File currentFile = new File("\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/current.lp\"");
 
     public void Graph1SetUp(){
         graph = new Graph();
@@ -134,7 +133,26 @@ public class WorkflowGraphTest {
     }
 
     @Test
-    public void TranslationTest(){
+    public void TranslationTest1(){
+        Graph1SetUp();
+
+        WorkflowGraph workflowGraph = new WorkflowGraph(graph.getVertices(), graph.getEdges());
+
+        TransitionDiagram t = workflowGraph.translate();
+
+        t.createASPCode();
+
+        assertEquals(7, t.getStates().size());
+        assertEquals(7, t.getActions().size());
+        assertEquals(7, t.getFluents().size());
+
+        for (State s: t.getStates()){
+            assertEquals(7, s.getFluents().size());
+        }
+    }
+
+    @Test
+    public void TranslationTest2(){
         Graph2SetUp();
 
         WorkflowGraph workflowGraph = new WorkflowGraph(graph.getVertices(), graph.getEdges());
@@ -159,78 +177,8 @@ public class WorkflowGraphTest {
 
         ClingoParser parser = new ClingoParser();
         assertNotNull(f);
-        assertTrue(parser.run(f));
+        assertTrue(parser.checkIfSatisfiable(f));
 
-        String messageNew = parser.getUniverse(f);
-        assertNotNull(messageNew);
-
-        String messageOld = parser.getUniverse(currentFile);
-        assertNotNull(messageOld);
-
-        StringReader stringReaderNew = new StringReader(messageNew);
-        StringReader stringReaderOld = new StringReader(messageOld);
-
-        BufferedReader brNew = new BufferedReader(stringReaderNew);
-        BufferedReader brOld = new BufferedReader(stringReaderOld);
-        List<String> linesOfNew = new ArrayList<>();
-        List<String> linesOfOld = new ArrayList<>();
-
-        try {
-            while(true){
-                String strNew = brNew.readLine();
-                String strOld = brOld.readLine();
-
-                if(strNew != null && strOld != null) {
-                    linesOfNew.add(strNew);
-                    linesOfOld.add(strOld);
-                } else {
-                    break;
-                }
-            }
-            brNew.close();
-            brOld.close();
-
-            getDifferences(linesOfOld, linesOfNew);
-
-           // VersionManager manager = new VersionManager();
-           // manager.saveNewFile(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getDifferences(List<String> linesOfOld, List<String> linesOfNew) {
-        List<String> removedLines = new ArrayList<>();
-        List<String> addedLines = new ArrayList<>();
-
-        if(linesOfNew.containsAll(linesOfOld)){
-            System.out.println("There are no changes in your new program. Save discarded.");
-            return;
-        }
-
-        for(String s: linesOfOld){
-            if(!linesOfNew.contains(s)){
-                removedLines.add(s);
-            }
-        }
-
-        for(String s: linesOfNew){
-            if(!linesOfOld.contains(s)){
-                addedLines.add(s);
-            }
-        }
-
-        System.out.println("These are the lines removed: ");
-        for(String s: removedLines){
-            System.out.println("    " + s);
-        }
-
-        System.out.println();
-        System.out.println();
-
-        System.out.println("These are the lines added: ");
-        for(String s: addedLines){
-            System.out.println("    " + s);
-        }
+        parser.getDifferences(f);
     }
 }

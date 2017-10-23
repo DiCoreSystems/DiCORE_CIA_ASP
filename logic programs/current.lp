@@ -1,4 +1,4 @@
-#const n = 7.
+
 step(0..n).
 
 inertial(poi).

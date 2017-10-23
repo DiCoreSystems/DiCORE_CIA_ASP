@@ -13,10 +13,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by CSZ on 14.06.2017.
+ * This class takes care of translating a WorkflowGraph to a corresponding TransitionDiagram.
  */
 public class WorkflowGraph extends Graph {
-
-    // This class takes care of translating a WorkflowGraph to a corresponding TransitionDiagram.
 
     List<Vertex> visitedVertices = new ArrayList<>();
     List<Vertex> vertices = new ArrayList<>();
@@ -96,7 +95,6 @@ public class WorkflowGraph extends Graph {
             visitedVertices.add(currentVertex);
         }
 
-        //TODO: A graph can have more than one entry point.
         List<State> start = new ArrayList<>();
         start.add(startState);
         states.remove(startState);
