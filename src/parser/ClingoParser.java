@@ -12,9 +12,23 @@ public class ClingoParser {
     // If Clingo detects an error or the resulting logical program is not satisfiable,
     // all changes will be discarded and all changes are undone.
 
-    private final File domainsFile = new File("\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/domains-test.lp\"");
-    private final File diffFile = new File("\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/diff.lp\"");
-    private final File currentFile = new File("\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/current.lp\"");
+    private final String configPath = getConfigPath();
+    private final File domainsFile = new File("\"" + configPath + "/domains.lp\"");
+    private final File diffFile = new File("\"" + configPath + "/diff.lp\"");
+    private final File currentFile = new File("\"" + configPath + "/current.lp\"");
+
+    private String getConfigPath() {
+        FileReader fr;
+        File configFile = new File("config");
+        try {
+            fr = new FileReader(configFile);
+            BufferedReader r = new BufferedReader(fr);
+            return r.readLine();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public boolean checkIfSatisfiable(File targetFile){
         Runtime rt = Runtime.getRuntime();

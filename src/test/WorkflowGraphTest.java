@@ -23,7 +23,22 @@ import static org.junit.Assert.*;
 public class WorkflowGraphTest {
 
     private Graph graph;
-    private final String configPath = "\"C:/Users/Jan/Documents/Arbeit/ASP/logic programs/new.lp\"";
+    private final String configPath = getConfigPath();
+    private final String testFilePath = "\"" + configPath + "/test/testNew.lp\"";
+
+    private String getConfigPath() {
+        FileReader fr;
+        File configFile = new File("config");
+        try {
+            fr = new FileReader(configFile);
+            BufferedReader r = new BufferedReader(fr);
+            return r.readLine();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public void Graph1SetUp(){
         graph = new Graph();
@@ -173,12 +188,21 @@ public class WorkflowGraphTest {
     @Test
     public void ParserTest(){
         File f;
-        f = new File(configPath);
+        f = new File(testFilePath);
 
         ClingoParser parser = new ClingoParser();
         assertNotNull(f);
         assertTrue(parser.checkIfSatisfiable(f));
 
         parser.getDifferences(f);
+    }
+
+    public void SaveTest(){
+        VersionManager manager = new VersionManager();
+        try {
+            manager.saveNewFile(new File(testFilePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

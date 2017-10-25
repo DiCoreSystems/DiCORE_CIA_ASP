@@ -26,9 +26,7 @@ public class TransitionDiagram {
 
     public File createASPCode(){
 
-        f = new File("../ASP/logic programs/new.lp");
-
-        // TODO: Save the current new.lp in a new file in case something goes wrong.
+        f = new File("../ASP/logic_programs/new.lp");
 
         if(!(f.exists() && !f.isDirectory())){
             try {
@@ -57,12 +55,12 @@ public class TransitionDiagram {
                     w.write("n_fluent(inertial, " + name + ").\n");
 
                     // INERTIA AXIOM FOR FLUENTS
-                    w.write("holds(" + name + ",I+1) :- \n" +
+                    w.write("n_holds(" + name + ",I+1) :- \n" +
                             "           n_fluent(inertial, " + name + "), \n" +
                             "           n_holds(" + name + ",I),\n" +
                             "           not -n_holds(" + name + ",I+1), step(I).\n");
 
-                    w.write("-holds(" + name + ",I+1) :- \n" +
+                    w.write("-n_holds(" + name + ",I+1) :- \n" +
                             "           n_fluent(inertial, " + name + "), \n" +
                             "           -n_holds(" + name + ",I),\n" +
                             "           not n_holds(" + name + ",I+1), step(I).\n");
