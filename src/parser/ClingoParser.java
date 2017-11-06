@@ -1,6 +1,7 @@
 package parser;
 
 import java.io.*;
+import java.nio.file.Paths;
 
 /**
  * Created by CSZ on 26.06.2017.
@@ -12,23 +13,10 @@ public class ClingoParser {
     // If Clingo detects an error or the resulting logical program is not satisfiable,
     // all changes will be discarded and all changes are undone.
 
-    private final String configPath = getConfigPath();
-    private final File domainsFile = new File("\"" + configPath + "/domains.lp\"");
-    private final File diffFile = new File("\"" + configPath + "/diff.lp\"");
-    private final File currentFile = new File("\"" + configPath + "/current.lp\"");
-
-    private String getConfigPath() {
-        FileReader fr;
-        File configFile = new File("config");
-        try {
-            fr = new FileReader(configFile);
-            BufferedReader r = new BufferedReader(fr);
-            return r.readLine();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    private final String configPath = Paths.get(".").normalize().toString() + "/logic_programs";
+    private File domainsFile = new File(configPath + "/domains.lp");
+    private File diffFile = new File(configPath + "/diff.lp");
+    private File currentFile = new File(configPath + "/current.lp");
 
     public boolean checkIfSatisfiable(File targetFile){
         Runtime rt = Runtime.getRuntime();
@@ -70,6 +58,10 @@ public class ClingoParser {
 
     public String getUniverse(File targetFile){
         Runtime rt = Runtime.getRuntime();
+
+        if(System.getProperty("os.name").startsWith("Windows")){
+            domainsFile = new File("\"" + configPath + "/domains.lp\"");
+        }
 
         try {
             Process exec = rt.exec("clingo-python " + targetFile + " " + domainsFile + " 0");
@@ -113,6 +105,10 @@ public class ClingoParser {
 
     public String getDifferences(File targetFile){
         Runtime rt = Runtime.getRuntime();
+
+        if(System.getProperty("os.name").startsWith("Windows")){
+            diffFile = new File("\"" + configPath + "/diff.lp\"");
+        }
 
         try {
             Process exec = rt.exec("clingo-python " + targetFile + " " + currentFile + " " + diffFile +" 0");
