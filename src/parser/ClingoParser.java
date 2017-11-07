@@ -73,7 +73,7 @@ public class ClingoParser {
                 String str = br.readLine();
 
                 if(str != null){
-
+                    // TODO: Use regex if possible
                     if(str.contains("universe")){
                         ready = true;
                     }
