@@ -1,23 +1,21 @@
-service(name).
+service(N) :- service(N, I, E), interface(I), endpoint(E).
 
-service_interface(S, I) :- service(S), interface(I).
+endpoint(N) :- endpoint(N, B, A), binding(B), address(A).
 
-endpoint(name).
+type(N, T) :- input(N,T).
+type(N, T) :- output(N, T).
+type(N, T) :- fault(N, T).
 
-endpoint_binding(E, B) :- endpoint(E), binding(B).
+input(N, T) :- input(O, N, T), operation(O).
+output(N, T) :- output(O, N, T), operation(O).
+fault(N, T) :- fault(O, N, T), operation(O).
 
-endpoint_address(E, A) :- endpoint(E), address(A).
+input(N, T) :- input(I, N, T), interface(I).
+output(N, T) :- output(I, N, T), interface(I).
+fault(N, T) :- fault(I, N, T), interface(I).
 
-type(N, T) :- input(O, N, T), operation(O).
-type(N, T) :- output(O, N, T), operation(O).
-type(N, T) :- fault(O, N, T), operation(O).
+interface(N) :- interface(N, O), operation(O).
 
-interface(name).
+interface(N) :- interface(N, F, O), fault(N, F, T), operation(O).
 
-interface_operation(I, O) :- interface(I), operation(O).
-
-input(O, name, typeName) :- operation(O).
-
-output(O, name, typeName) :- operation(O).
-
-fault(O, name, typeName) :- operation(O).
+operation(O) :- operation(O, I, Out, F), input(O, I, T), output(O, Out, T), fault(O, F, T).
