@@ -14,8 +14,6 @@ fault(latestTutorialOperation, invalidDateFault, invalidDateError).
 
 type(typeLatestTutorialRequest, xs:date).
 
-type(computer, sequence(desktop, laptop)).
-
 service(latestTutorialService, latestTutorialInterface, latestTutorialEndpoint).
 
 endpoint(latestTutorialEndpoint, latestTutorialSOAPBinding, http://jenkov.com/latestTutorial).

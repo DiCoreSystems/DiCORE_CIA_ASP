@@ -1,10 +1,23 @@
 % Inputs, Outputs and Faults are all treated as types.
 % This allows the user to check if new types were declared or removed.
-type(N, T) :- input(N,T).
+type(date, xs:date).
+type(string, xs:string).
+type(decimal, xs:decimal).
+type(float, xs:float).
+type(boolean, xs:boolean).
+type(time, xs:time).
+type(integer, xs:integer).
+type(anyType, xs:anyType).
+
+type(N, T) :- input(N, T).
 type(N, T) :- output(N, T).
 type(N, T) :- fault(N, T).
 
-% Each time is coupled to an operation or an interface, that
+complexType(N) :- complexType(N, S), sequence(S).
+
+sequence(S) :- sequence(S, N, T), type(N, T).
+
+% Each type is coupled to an operation or an interface, that
 % uses said type as input, output or fault.
 % If a type is declared correctly it is then known as an correct type.
 input(N, T) :- input(O, N, T), operation(O).
@@ -26,3 +39,4 @@ interface(N) :- interface(N, F, O), fault(N, F, T), operation(O).
 
 % An operation has a name, and like th interface three types attached.
 operation(O) :- operation(O, I, Out, F), input(O, I, T1), output(O, Out, T2), fault(O, F, T3).
+operation(O) :- operation(O, I, Out), input(O, I, T1), output(O, Out, T2).

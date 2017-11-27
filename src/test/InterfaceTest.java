@@ -1,10 +1,12 @@
 package test;
 
+import parser.WsdlParser;
 import file.WSDLDocument;
-import org.junit.Assert;
 import org.junit.Test;
-import parser.WSDLParser;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.nio.file.Paths;
 
 /**
@@ -12,12 +14,22 @@ import java.nio.file.Paths;
  */
 public class InterfaceTest {
 
-    private final String configPath = Paths.get(".").normalize().toString() + "/text";
-
     @Test
     public void ParserTest(){
-        WSDLDocument document = new WSDLDocument(configPath + "/WSDLtest.txt");
-        WSDLParser parser = new WSDLParser();
-        Assert.assertTrue(parser.parse(document));
+        String configPath = Paths.get("text").normalize().toString();
+        WSDLDocument document = new WSDLDocument(configPath + "/WSDLtest.wsdl");
+        WsdlParser parser = new WsdlParser();
+        try {
+            String[] operations = parser.listOperationsUnique(document.getPath().getAbsolutePath());
+            for(String op_name: operations){
+                System.out.println(op_name);
+            }
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 }
