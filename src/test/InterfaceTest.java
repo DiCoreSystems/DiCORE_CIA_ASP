@@ -17,13 +17,10 @@ public class InterfaceTest {
     @Test
     public void ParserTest(){
         String configPath = Paths.get("text").normalize().toString();
-        WSDLDocument document = new WSDLDocument(configPath + "/WSDLtest.wsdl");
+        WSDLDocument document = new WSDLDocument(configPath + "/sample2.wsdl");
         WsdlParser parser = new WsdlParser();
         try {
-            String[] operations = parser.listOperationsUnique(document.getPath().getAbsolutePath());
-            for(String op_name: operations){
-                System.out.println(op_name);
-            }
+            parser.parse(document);
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
