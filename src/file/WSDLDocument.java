@@ -1,5 +1,7 @@
 package file;
 
+import wsdlhelper.*;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -8,7 +10,8 @@ import java.util.ArrayList;
  */
 public class WSDLDocument {
     private File path;
-    private ArrayList<String> types;
+    private ArrayList<MessageTuple> messages;
+    private ArrayList<TypeTriple> types;
 
     public WSDLDocument(String path){
         this.path = new File(path);
@@ -18,11 +21,19 @@ public class WSDLDocument {
         return path;
     }
 
-    public void setTypes(ArrayList<String> types){
-        this.types = types;
+    public void addMessage(MessageTuple message){
+        messages.add(message);
     }
 
-    public ArrayList<String> getTypes() {
+    public void addType(TypeTriple type){
+        types.add(type);
+    }
+
+    public ArrayList<MessageTuple> getMessages() {
+        return messages;
+    }
+
+    public ArrayList<TypeTriple> getTypes() {
         return types;
     }
 }

@@ -27,56 +27,55 @@ public class WsdlParser {
         NodeList docElementChildNodes = docElement.getChildNodes();
         for (int i = 0; i < docElementChildNodes.getLength(); i++){
             Node item = docElementChildNodes.item(i);
-            if(item == null || item.getNodeName().equals("#text")){
-                continue;
-            }
 
-            if(item.getNodeName().equals("message")){
-                for (int j = 0; j < item.getChildNodes().getLength(); j++){
-                    Node item2 = item.getChildNodes().item(i);
-                    if(item2 == null || item2.getNodeName().equals("#text")){
-                        continue;
+            switch(item.getNodeName()){
+                case "#text": break;
+
+                case "message":
+                    for (int j = 0; j < item.getChildNodes().getLength(); j++){
+                        Node item2 = item.getChildNodes().item(i);
+                        if(item2 == null || item2.getNodeName().equals("#text")){
+                            continue;
+                        }
+
+                        if(item2.getNodeName().equals("part")){
+                            item2.getAttributes().getNamedItem("name").getNodeValue();
+                            item2.getAttributes().getNamedItem("type").getNodeValue();
+                        }
                     }
 
-                    if(item2.getNodeName().equals("part")){
-                        item2.getAttributes().getNamedItem("name").getNodeValue();
-                        item2.getAttributes().getNamedItem("type").getNodeValue();
-                    }
-                }
-            }
+                case "portType":
+                    for (int j = 0; j < item.getChildNodes().getLength(); j++){
+                        Node item2 = item.getChildNodes().item(i);
+                        if(item2 == null || item2.getNodeName().equals("#text")){
+                            continue;
+                        }
 
-            if(item.getNodeName().equals("portType")){
-                for (int j = 0; j < item.getChildNodes().getLength(); j++){
-                    Node item2 = item.getChildNodes().item(i);
-                    if(item2 == null || item2.getNodeName().equals("#text")){
-                        continue;
-                    }
+                        if(item2.getNodeName().equals("operation")){
+                            for (int k = 0; k < item2.getChildNodes().getLength(); k++){
+                                Node item3 = item2.getChildNodes().item(i);
+                                if(item3 == null || item3.getNodeName().equals("#text")){
+                                    continue;
+                                }
 
-                    if(item2.getNodeName().equals("operation")){
-                        for (int k = 0; k < item2.getChildNodes().getLength(); k++){
-                            Node item3 = item2.getChildNodes().item(i);
-                            if(item3 == null || item3.getNodeName().equals("#text")){
-                                continue;
-                            }
+                                if(item3.getNodeName().equals("input")){
+                                    item3.getAttributes().getNamedItem("message").getNodeValue();
+                                }
 
-                            if(item3.getNodeName().equals("input")){
-                                item3.getAttributes().getNamedItem("message").getNodeValue();
-                            }
-
-                            if(item3.getNodeName().equals("output")){
-                                item3.getAttributes().getNamedItem("message").getNodeValue();
+                                if(item3.getNodeName().equals("output")){
+                                    item3.getAttributes().getNamedItem("message").getNodeValue();
+                                }
                             }
                         }
                     }
-                }
-            }
+                    break;
 
-            if(item.getNodeName().equals("binding")){
-                item.getAttributes().getNamedItem("name").getNodeValue();
-            }
-
-            if(item.getNodeName().equals("service")){
-                item.getAttributes().getNamedItem("name").getNodeValue();
+                case "binding":
+                    item.getAttributes().getNamedItem("name").getNodeValue();
+                    break;
+                case "service":
+                    item.getAttributes().getNamedItem("name").getNodeValue();
+                    break;
             }
         }
     }
