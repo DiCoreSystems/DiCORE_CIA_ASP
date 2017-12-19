@@ -12,10 +12,10 @@ import java.nio.file.Paths;
  */
 public class VersionManager {
     private final String configPath = Paths.get(".").normalize().toString() + "/logic_programs";
-    private final String file1 = configPath + "/current.lp";
-    private final String file2 = configPath + "/previous1.lp";
-    private final String file3 = configPath + "/previous2.lp";
-    private final String file4 = configPath + "/previous3.lp";
+    private final String file1 = configPath + "/Workflow/current.lp";
+    private final String file2 = configPath + "/Workflow/previous1.lp";
+    private final String file3 = configPath + "/Workflow/previous2.lp";
+    private final String file4 = configPath + "/Workflow/previous3.lp";
 
     public void saveNewFile(File newFile) throws IOException {
         overwriteFiles(file3, file4);

@@ -17,6 +17,7 @@ public class ClingoParser {
     private File domainsFile = new File(configPath + "/domains.lp");
     private File diffFile = new File(configPath + "/diff.lp");
     private File currentFile = new File(configPath + "/current.lp");
+    private File interFaceDefaultFile = new File(configPath + "/Interface/default.lp");
 
     public boolean checkIfSatisfiable(File targetFile){
         Runtime rt = Runtime.getRuntime();
