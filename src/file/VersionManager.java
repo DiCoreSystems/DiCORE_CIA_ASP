@@ -39,8 +39,8 @@ public class VersionManager {
         while(true){
             String str = bufferedReader.readLine();
             if(str != null){
-                // The n_ prefix is used for comparison. It serves no purpose in a saved file.
-                str.replace("n_", "");
+                // The _n_ prefix is used for comparison. It serves no purpose in a saved file.
+                str.replace("_n_", "");
                 builder.append(str + "\n");
             } else {
                 break;

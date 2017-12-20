@@ -9,21 +9,34 @@ import java.nio.file.Paths;
  * or we overwrite our current logic program with this.
  */
 public class ClingoParser {
+    // TODO: Think about renaming this class, because runs the clingo file, not parsing it.
     // This class runs a given ASP program via command and checks the result output for errors.
     // If Clingo detects an error or the resulting logical program is not satisfiable,
     // all changes will be discarded and all changes are undone.
 
     private final String configPath = Paths.get(".").normalize().toString() + "/logic_programs";
     private File domainsFile = new File(configPath + "/domains.lp");
-    private File diffFile = new File(configPath + "/diff.lp");
+    private File workflowDiffFile = new File(configPath + "/Workflow/diff.lp");
     private File currentFile = new File(configPath + "/current.lp");
-    private File interFaceDefaultFile = new File(configPath + "/Interface/default.lp");
+    private File interfaceDefaultFile = new File(configPath + "/Interface/default.lp");
+    private File interfaceDiffFile = new File(configPath + "/Interface/diff.lp");
 
-    public boolean checkIfSatisfiable(File targetFile){
+    public boolean checkIfSatisfiable(File targetFile, boolean workflow){
         Runtime rt = Runtime.getRuntime();
 
         try {
-            Process exec = rt.exec("clingo " + targetFile +  " 0");
+            Process exec;
+
+            if(System.getProperty("os.name").startsWith("Windows")){
+                targetFile = new File("\"" + targetFile.getAbsolutePath() + "\"");
+                interfaceDefaultFile = new File("\"" + configPath + "/Interface/default.lp\"");
+            }
+
+            if(workflow){
+                exec = rt.exec("clingo " + targetFile + " 0");
+            } else {
+                exec = rt.exec("clingo " + targetFile + " " + interfaceDefaultFile + " 0");
+            }
 
             StringBuilder stringBuilder = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(exec.getInputStream(), "UTF-8"));
@@ -104,15 +117,29 @@ public class ClingoParser {
         return null;
     }
 
-    public String getDifferences(File targetFile){
+    public String getDifferences(File targetFile, boolean workflow){
         Runtime rt = Runtime.getRuntime();
 
         if(System.getProperty("os.name").startsWith("Windows")){
-            diffFile = new File("\"" + configPath + "/diff.lp\"");
+            if(workflow) {
+                workflowDiffFile = new File("\"" + configPath + "/Workflow/diff.lp\"");
+            } else {
+                interfaceDiffFile = new File("\"" + configPath + "/Interface/diff.lp\"");
+            }
+
+
         }
 
         try {
-            Process exec = rt.exec("clingo-python " + targetFile + " " + currentFile + " " + diffFile +" 0");
+            Process exec;
+
+            if(workflow){
+                exec = rt.exec("clingo-python " + targetFile + " " + currentFile + " " + workflowDiffFile +" 0");
+            } else {
+                exec = rt.exec("clingo-python " + targetFile + " " + interfaceDiffFile +
+                        " " + interfaceDefaultFile + " 0");
+            }
+
 
             StringBuilder stringBuilder = new StringBuilder();
             BufferedReader br = new BufferedReader(new InputStreamReader(exec.getInputStream(), "UTF-8"));

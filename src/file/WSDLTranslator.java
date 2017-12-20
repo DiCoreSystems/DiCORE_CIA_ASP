@@ -13,11 +13,11 @@ import java.io.IOException;
  */
 public class WSDLTranslator {
 
-    public void translate(WSDLDocument document){
-        translate(document, "../ASP/logic_programs/interface/newFile.txt");
+    public File translate(WSDLDocument document){
+        return translate(document, "../ASP/logic_programs/Interface/newFile.lp");
     }
 
-    public void translate(WSDLDocument document, String fileName){
+    public File translate(WSDLDocument document, String fileName){
         File f = new File(fileName);
 
         try {
@@ -65,5 +65,7 @@ public class WSDLTranslator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return f;
     }
 }
