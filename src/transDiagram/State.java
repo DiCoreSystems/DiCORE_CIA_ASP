@@ -16,6 +16,7 @@ public class State {
 
     public State(UUID id, List<Fluent> fluents){
         this.id = id;
+        this.name = "Unnamed State";
         this.fluents = fluents;
     }
 

@@ -70,7 +70,7 @@ public class TransitionDiagram {
                     // CWA FOR FLUENTS
                     w.write("-_n_holds(" + name + ",I+1) :- \n" +
                             "           _n_fluent(defined" + name + "), \n" +
-                            "           not holds(" + name + ",I).\n");
+                            "           not holds(" + name + ",I), step(I).\n");
                 }
 
                 w.write("\n");
@@ -102,6 +102,9 @@ public class TransitionDiagram {
             }
 
             w.write("\n");
+
+            // Step 4: Search through the graph via broad search.
+            // Write ASP Codeblocks for each state and its prede- and successors.
 
             int i = 0;
             List<State> statesToVisit = new ArrayList<>();
@@ -149,6 +152,7 @@ public class TransitionDiagram {
                     w.write("_n_occurs(do" + state.getName() + "," + i + ").\n\n");
                 }
 
+                // If nextVisit is empty
                 if(nextVisit.isEmpty()){
                     break;
                 }
