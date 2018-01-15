@@ -39,9 +39,6 @@ public class Fluent {
     }
 
     public boolean isInertial() {
-        //Note to me: Inertial fluents are triggered by actions. They change their value then.
-        //If an action does not occur, it keeps its value from the previous timestep.
-        // A defined fluent is much like a constant. No action can change the value. It's defined by unique bodies insted.
         return inertial;
     }
 }

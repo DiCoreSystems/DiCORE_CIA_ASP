@@ -51,14 +51,14 @@ public class WorkflowGraph extends Graph {
         states.add(startState);
 
         // Now we follow the graph vertex by vertex, until we reach the end.
-        // Each passed vertex will yield an Action or a new state.
+        // Each passed vertex will yield a new state.
         verticesToCheck.offer(startingVertex);
 
         while(!verticesToCheck.isEmpty()){
             Vertex currentVertex = verticesToCheck.poll();
             State newState;
 
-            if(visitedVertices.contains((currentVertex))){
+            if(visitedVertices.contains(currentVertex)){
                 continue;
             }
 
@@ -117,6 +117,4 @@ public class WorkflowGraph extends Graph {
         }
         return null;
     }
-
-    //Planned: A method which is called once the graph changes and submits the changes to the TranstionDiagram.
 }

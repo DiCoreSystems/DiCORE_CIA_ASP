@@ -193,11 +193,12 @@ public class WorkflowGraphTest {
 
         ClingoParser parser = new ClingoParser();
         assertNotNull(f);
-        assertTrue(parser.checkIfSatisfiable(f));
+        assertTrue(parser.checkIfSatisfiable(f, true));
 
-        parser.getDifferences(f);
+        parser.getDifferences(f, true);
     }
 
+    @Test
     public void SaveTest(){
         VersionManager manager = new VersionManager();
         try {
