@@ -1,14 +1,15 @@
 % Inputs, Outputs and Faults are all treated as types.
 % This allows the user to check if new types were declared or removed.
-type(date, xs:date).
-type(xs:string, string).
-type(xsd:string, string).
-type(xs:decimal, decimal).
-type(float, xs:float).
-type(boolean, xs:boolean).
-type(time, xs:time).
-type(integer, xs:integer).
-type(anyType, xs:anyType).
+
+type(date, xs-date).
+type(string, xs-string).
+type(string, xsd-string).
+type(decimal, xs-decimal).
+type(float, xs-float).
+type(boolean, xs-boolean).
+type(time, xs-time).
+type(integer, xs-integer).
+type(anyType, xs-anyType).
 
 type(N, T) :- input(N, T).
 type(N, T) :- output(N, T).

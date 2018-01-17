@@ -111,6 +111,7 @@ public class TransitionDiagram {
             List<State> nextVisit = new ArrayList<>();
             List<State> visitedStates = new ArrayList<>();
 
+            // Get all successors of our artificial start state.
             for(State startState: startingStates){
                 for(Action startAction: startState.getOutgoingActions()){
                     statesToVisit.add(startAction.getEndState());
@@ -129,13 +130,13 @@ public class TransitionDiagram {
                         w.write("_n_holds(" + state.getName() + ",T+1) :- \n");
                         w.write("           _n_occurs(do" + state.getName() + ", T).\n\n");
                     } else {
-                        for(Action a: state.getIngoingActions()){
+                        for(Action predecessorAction: state.getIngoingActions()){
                             w.write("_n_holds(" + state.getName() + ",T+1) :- \n");
 
                             // The state "start" is merely used as an orientation where the workflow starts.
                             // It has no further impact on the workflow.
-                            if(!a.getStartState().getName().equals("start")){
-                                w.write("           _n_holds(" + a.getStartState().getName() + ",T),\n");
+                            if(!predecessorAction.getStartState().getName().equals("start")){
+                                w.write("           _n_holds(" + predecessorAction.getStartState().getName() + ",T),\n");
                             }
 
                             w.write("          -_n_holds(" + state.getName() + ",T),\n");

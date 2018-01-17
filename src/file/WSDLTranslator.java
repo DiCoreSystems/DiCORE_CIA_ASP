@@ -10,6 +10,7 @@ import java.io.IOException;
 
 /**
  * Created by CSZ on 14.12.2017.
+ * This class translates every information stored in our WSDLDocument directly into ASP.
  */
 public class WSDLTranslator {
 
@@ -31,8 +32,6 @@ public class WSDLTranslator {
 
             w.write("binding(" + binding + ").\n");
 
-            //operation(O) :- operation(O, I, Out, F), input(O, I, T1), output(O, Out, T2), fault(O, F, T3).
-            //operation(O) :- operation(O, I, Out), input(O, I, T1), output(O, Out, T2).
             for(OperationTuple o: document.getOperations()){
                 w.write("operation(" + o.getName() + ", " + o.getInput() + ", " + o.getOutput() + ").\n");
             }
@@ -56,7 +55,6 @@ public class WSDLTranslator {
                 }
             }
 
-            // message(M) :- messagePart(M, P), type(P, T).
             for (MessageTuple m: document.getMessages()){
                 w.write("messagePart(" + m.getMessage() + ", " + m.getPart() + ").\n");
             }

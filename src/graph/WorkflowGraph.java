@@ -34,6 +34,7 @@ public class WorkflowGraph extends Graph {
         verticesToCheck.add(this.getVertices().get(0));
 
         vertices = this.getVertices();
+
         // Create a fluent for each vertex (except for the start vertex)
         for (Vertex v: vertices){
             if(v.getName() != "start"){
@@ -46,7 +47,7 @@ public class WorkflowGraph extends Graph {
             }
         }
 
-        // Step 1: Create a start state
+        // Create a start state (used only for orientation)
         State startState = new State(UUID.randomUUID(), "start", fluents);
         states.add(startState);
 
@@ -56,7 +57,6 @@ public class WorkflowGraph extends Graph {
 
         while(!verticesToCheck.isEmpty()){
             Vertex currentVertex = verticesToCheck.poll();
-            State newState;
 
             if(visitedVertices.contains(currentVertex)){
                 continue;
@@ -71,6 +71,7 @@ public class WorkflowGraph extends Graph {
                 // Find out which fluent is changed by our action.
                 List<Fluent> newFluents = new ArrayList<>();
                 for(Fluent f: fluents){
+                    // TODO
                     // This one needs improvement. Currently we're connecting a action Vertex with
                     // the changed fluents just by the name.
                     if(f.getName().contains(nextVertex.getName())){
@@ -82,15 +83,19 @@ public class WorkflowGraph extends Graph {
 
                 // Find the corresponding state of our vertex.
                 State currentState = checkForName(currentVertex.getName());
-                if(checkForName(nextVertex.getName()) == null){
-                    newState = new State(UUID.randomUUID(), nextVertex.getName(), newFluents);
-                    states.add(newState);
 
-                    Action a = new Action(UUID.randomUUID(), currentState, newState, "do" + nextVertex.getName());
-                    actions.add(a);
-                    currentState.addOutgoingAction(a);
-                    newState.addIngoingAction(a);
+                // Check if our vertex already has a corresponding state.
+                State nextState = checkForName(nextVertex.getName());
+                if(nextState == null){
+                    // Our state does not exist. Create a new one.
+                    nextState = new State(UUID.randomUUID(), nextVertex.getName(), newFluents);
+                    states.add(nextState);
                 }
+
+                Action a = new Action(UUID.randomUUID(), currentState, nextState, "do" + nextVertex.getName());
+                actions.add(a);
+                currentState.addOutgoingAction(a);
+                nextState.addIngoingAction(a);
             }
             visitedVertices.add(currentVertex);
         }

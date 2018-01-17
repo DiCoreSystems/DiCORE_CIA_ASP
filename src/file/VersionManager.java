@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 /**
  * Created by Jan Brümmer on 10.10.2017
  * This class takes care of the version management by saving the last 3 workflows that have been added by the
- * WorkflowGraph class. It is triggered after the ClingoParser has parsed the new file and compared it to the most
+ * WorkflowGraph class. It is triggered after the ClingoRunner has parsed the new file and compared it to the most
  * recent workflow. If the new workflow is either unsatisfiable or indifferent to the most recent workflow, then
  * nothing will be saved and all changes (if there are any) will be discarded.
  */

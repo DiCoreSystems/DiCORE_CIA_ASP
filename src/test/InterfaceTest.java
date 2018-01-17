@@ -1,7 +1,7 @@
 package test;
 
 import file.WSDLTranslator;
-import parser.ClingoParser;
+import parser.ClingoRunner;
 import parser.WSDLParser;
 import file.WSDLDocument;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class InterfaceTest {
 
-    String configPath = Paths.get("text").normalize().toString();
+    private final String configPath = System.getProperty("user.dir") + "\\text";
 
     @Test
     public void Sample1Test(){
@@ -46,7 +46,7 @@ public class InterfaceTest {
 
         assertNotNull(f);
 
-        ClingoParser clingo = new ClingoParser();
+        ClingoRunner clingo = new ClingoRunner();
         assertTrue(clingo.checkIfSatisfiable(f, false));
     }
 

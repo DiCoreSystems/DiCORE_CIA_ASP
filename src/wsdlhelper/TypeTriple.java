@@ -26,8 +26,8 @@ public class TypeTriple {
     }
 
     public TypeTriple(String name, String type, TypeAttribute attribute){
-        this.name = name;
-        this.type = type;
+        this.name = name.replace(":", "-");
+        this.type = type.replace(":", "-");
         this.attribute = attribute;
     }
 

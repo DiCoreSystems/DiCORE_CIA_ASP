@@ -5,16 +5,15 @@ import java.nio.file.Paths;
 
 /**
  * Created by CSZ on 26.06.2017.
- * The ClingoParser runs the new logic program and depending on the result, we either discard all changes
+ * The ClingoRunner runs the new logic program and depending on the result, we either discard all changes
  * or we overwrite our current logic program with this.
  */
-public class ClingoParser {
-    // TODO: Think about renaming this class, because runs the clingo file, not parsing it.
+public class ClingoRunner {
     // This class runs a given ASP program via command and checks the result output for errors.
     // If Clingo detects an error or the resulting logical program is not satisfiable,
     // all changes will be discarded and all changes are undone.
 
-    private final String configPath = Paths.get(".").normalize().toString() + "/logic_programs";
+    private final String configPath = System.getProperty("user.dir") + "\\logic_programs";
     private File domainsFile = new File(configPath + "/domains.lp");
     private File workflowDiffFile = new File(configPath + "/Workflow/diff.lp");
     private File currentFile = new File(configPath + "/current.lp");
@@ -33,9 +32,13 @@ public class ClingoParser {
             }
 
             if(workflow){
-                exec = rt.exec("clingo " + targetFile + " 0");
+                String command = "clingo " + targetFile + " 0";
+                System.out.println("The command is: " + command);
+                exec = rt.exec(command);
             } else {
-                exec = rt.exec("clingo " + targetFile + " " + interfaceDefaultFile + " 0");
+                String command = "clingo " + targetFile + " " + interfaceDefaultFile + " 0";
+                System.out.println("The command is: " + command);
+                exec = rt.exec(command);
             }
 
             StringBuilder stringBuilder = new StringBuilder();
