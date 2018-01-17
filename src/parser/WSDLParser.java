@@ -23,7 +23,6 @@ public class WSDLParser {
             ParserConfigurationException{
         d = DocumentBuilderFactory.newInstance().newDocumentBuilder()
                 .parse(new FileInputStream(document.getPath().getAbsolutePath()));
-        d.
         Element docElement = d.getDocumentElement();
         NodeList docElementChildNodes = docElement.getChildNodes();
         for (int i = 0; i < docElementChildNodes.getLength(); i++){
