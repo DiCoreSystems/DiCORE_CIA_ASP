@@ -31,9 +31,9 @@ public class InterfaceTest {
         try {
             parser.parse(document);
 
-            assertEquals(document.getMessages().size(), 2);
-            assertEquals(document.getOperations().size(), 1);
-            assertEquals(document.getTypes().size(),6);
+            assertEquals(2, document.getMessages().size());
+            assertEquals(1, document.getOperations().size());
+            assertEquals(6, document.getTypes().size());
 
             f = new WSDLTranslator().translate(document);
         } catch (SAXException e) {
@@ -69,5 +69,16 @@ public class InterfaceTest {
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testCharacterReplacement(){
+        String namespace = "http://example.com/stockquote.wsdl";
+        String expectedResult = "http*58**47**47*example*46*com*47*stockquote*46*wsdl";
+
+        WSDLParser parser = new WSDLParser();
+        String result = parser.replaceSpecialCharacters(namespace);
+
+        assertEquals("", expectedResult, result);
     }
 }

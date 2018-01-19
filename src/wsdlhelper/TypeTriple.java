@@ -26,8 +26,8 @@ public class TypeTriple {
     }
 
     public TypeTriple(String name, String type, TypeAttribute attribute){
-        this.name = name.replace(":", "-");
-        this.type = type.replace(":", "-");
+        this.name = firstLetterLowerCase(name.replace(":", "-"));
+        this.type = firstLetterLowerCase(type.replace(":", "-"));
         this.attribute = attribute;
     }
 
@@ -37,6 +37,13 @@ public class TypeTriple {
     }
 
     public void setParent(String parent) {
-        this.parent = parent;
+        this.parent = firstLetterLowerCase(parent);
+    }
+
+    private String firstLetterLowerCase(String string){
+        char c[] = string.toCharArray();
+        c[0] = Character.toLowerCase(c[0]);
+        String result = new String(c);
+        return result;
     }
 }

@@ -4,12 +4,14 @@ import wsdlhelper.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by CSZ on 07.11.2017.
  */
 public class WSDLDocument {
     private File path;
+    private HashMap<String, String> namespaces = new HashMap<>();
     private ArrayList<MessageTuple> messages = new ArrayList<>();
     private ArrayList<TypeTriple> types = new ArrayList<>();
     private ArrayList<OperationTuple> operations = new ArrayList<>();
@@ -62,5 +64,9 @@ public class WSDLDocument {
 
     public void setBinding(String binding) {
         this.binding = binding;
+    }
+
+    public HashMap<String, String> getNamespaceMap() {
+        return namespaces;
     }
 }

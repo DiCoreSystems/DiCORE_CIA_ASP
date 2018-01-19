@@ -13,9 +13,10 @@ import java.io.IOException;
  * This class translates every information stored in our WSDLDocument directly into ASP.
  */
 public class WSDLTranslator {
+    private final String configPath = System.getProperty("user.dir") + "\\logic_programs";
 
     public File translate(WSDLDocument document){
-        return translate(document, "../ASP/logic_programs/Interface/newFile.lp");
+        return translate(document, configPath + "\\Interface\\newFile.lp");
     }
 
     public File translate(WSDLDocument document, String fileName){
@@ -26,11 +27,11 @@ public class WSDLTranslator {
 
             String service = document.getService();
 
-            w.write("service(" + service + ").\n");
+            w.write("service(" + firstLetterLowerCase(service) + ").\n");
 
             String binding = document.getBinding();
 
-            w.write("binding(" + binding + ").\n");
+            w.write("binding(" + firstLetterLowerCase(binding) + ").\n");
 
             for(OperationTuple o: document.getOperations()){
                 w.write("operation(" + o.getName() + ", " + o.getInput() + ", " + o.getOutput() + ").\n");
@@ -65,5 +66,12 @@ public class WSDLTranslator {
         }
 
         return f;
+    }
+
+    private String firstLetterLowerCase(String string){
+        char c[] = string.toCharArray();
+        c[0] = Character.toLowerCase(c[0]);
+        String result = new String(c);
+        return result;
     }
 }
