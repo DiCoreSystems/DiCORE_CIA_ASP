@@ -72,6 +72,23 @@ public class InterfaceTest {
     }
 
     @Test
+    public void Sample3Test(){
+        WSDLDocument document = new WSDLDocument(configPath + "/sample3.wsdl");
+        WSDLParser parser = new WSDLParser();
+        try {
+            parser.parse(document);
+
+            new WSDLTranslator().translate(document);
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void testCharacterReplacement(){
         String namespace = "http://example.com/stockquote.wsdl";
         String expectedResult = "http*58**47**47*example*46*com*47*stockquote*46*wsdl";

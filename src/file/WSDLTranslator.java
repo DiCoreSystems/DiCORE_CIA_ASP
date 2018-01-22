@@ -27,11 +27,13 @@ public class WSDLTranslator {
 
             String service = document.getService();
 
-            w.write("service(" + firstLetterLowerCase(service) + ").\n");
+            if(service != null){
+                w.write("service(" + firstLetterLowerCase(service) + ").\n");
+            }
 
-            String binding = document.getBinding();
-
-            w.write("binding(" + firstLetterLowerCase(binding) + ").\n");
+            for(String binding: document.getBindings()){
+                w.write("binding(" + firstLetterLowerCase(binding) + ").\n");
+            }
 
             for(OperationTuple o: document.getOperations()){
                 w.write("operation(" + o.getName() + ", " + o.getInput() + ", " + o.getOutput() + ").\n");
@@ -40,16 +42,23 @@ public class WSDLTranslator {
             for (TypeTriple t: document.getTypes()){
                 switch(t.getAttribute()){
                     case NORMAL:
-                        w.write("type(" + t.getName() + ", " + t.getType() + ").\n");
+                        w.write("type(" + firstLetterLowerCase(t.getName()) +
+                                ", " + firstLetterLowerCase(t.getType()) + ").\n");
                         break;
                     case INPUT:
-                        w.write("input(" + t.getParent() + ", " + t.getName() + ", " + t.getType() + ").\n");
+                        w.write("input(" + firstLetterLowerCase(t.getParent().getName())
+                                + ", " + firstLetterLowerCase(t.getName()) +
+                                ", " + firstLetterLowerCase(t.getType()) + ").\n");
                         break;
                     case OUTPUT:
-                        w.write("output(" + t.getParent() + ", " + t.getName() + ", " + t.getType() + ").\n");
+                        w.write("output(" + firstLetterLowerCase(t.getParent().getName())
+                                + ", " + firstLetterLowerCase(t.getName())
+                                + ", " + firstLetterLowerCase(t.getType()) + ").\n");
                         break;
                     case FAULT:
-                        w.write("fault(" + t.getParent() + ", " + t.getName() + ", " + t.getType() + ").\n");
+                        w.write("fault(" + firstLetterLowerCase(t.getParent().getName()) +
+                                ", " + firstLetterLowerCase(t.getName()) +
+                                ", " + firstLetterLowerCase(t.getType()) + ").\n");
                         break;
                     default:
                         System.out.println("Your type is not defined.");
@@ -57,7 +66,8 @@ public class WSDLTranslator {
             }
 
             for (MessageTuple m: document.getMessages()){
-                w.write("messagePart(" + m.getMessage() + ", " + m.getPart() + ").\n");
+                w.write("messagePart(" + firstLetterLowerCase(m.getMessageName()) + ", " +
+                        firstLetterLowerCase(m.getPart()) + ").\n");
             }
 
             w.close();

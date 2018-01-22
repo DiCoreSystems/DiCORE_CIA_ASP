@@ -15,40 +15,55 @@ public class WSDLDocument {
     private ArrayList<MessageTuple> messages = new ArrayList<>();
     private ArrayList<TypeTriple> types = new ArrayList<>();
     private ArrayList<OperationTuple> operations = new ArrayList<>();
-    private String binding;
+    private ArrayList<WSDLInterface> interfaces = new ArrayList<>();
+    private ArrayList<String> bindings = new ArrayList<>();
     private String service;
 
     public WSDLDocument(String path){
         this.path = new File(path);
     }
 
+    //----------------------------------
+
     public File getPath() {
         return path;
+    }
+
+    //----------------------------------
+
+    public ArrayList<MessageTuple> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(ArrayList<MessageTuple> messages) {
+        this.messages = messages;
     }
 
     public void addMessage(MessageTuple message){
         messages.add(message);
     }
 
+    //----------------------------------
+
+    public ArrayList<TypeTriple> getTypes() {
+        return types;
+    }
+
     public void addType(TypeTriple type){
         types.add(type);
+    }
+
+    //----------------------------------
+
+    public ArrayList<OperationTuple> getOperations() {
+        return operations;
     }
 
     public void addOperation(OperationTuple operation){
         operations.add(operation);
     }
 
-    public ArrayList<MessageTuple> getMessages() {
-        return messages;
-    }
-
-    public ArrayList<TypeTriple> getTypes() {
-        return types;
-    }
-
-    public ArrayList<OperationTuple> getOperations() {
-        return operations;
-    }
+    //----------------------------------
 
     public String getService() {
         return service;
@@ -58,15 +73,31 @@ public class WSDLDocument {
         this.service = service;
     }
 
-    public String getBinding() {
-        return binding;
+    //----------------------------------
+
+    public ArrayList<String> getBindings() {
+        return bindings;
     }
 
-    public void setBinding(String binding) {
-        this.binding = binding;
+    public void setBindings(ArrayList<String> bindings) {
+        this.bindings = bindings;
     }
+
+    public void addBinding(String binding) {
+        bindings.add(binding);
+    }
+
+    //----------------------------------
 
     public HashMap<String, String> getNamespaceMap() {
         return namespaces;
     }
+
+    //----------------------------------
+
+    public ArrayList<WSDLInterface> getInterfaces() {
+        return interfaces;
+    }
+
+
 }

@@ -1,7 +1,7 @@
 package wsdlhelper;
 
 public class TypeTriple {
-    private String parent;
+    private OperationTuple parent;
     private String name;
     private String type;
     private TypeAttribute attribute;
@@ -26,24 +26,21 @@ public class TypeTriple {
     }
 
     public TypeTriple(String name, String type, TypeAttribute attribute){
-        this.name = firstLetterLowerCase(name.replace(":", "-"));
-        this.type = firstLetterLowerCase(type.replace(":", "-"));
+        this.name = name.replace(":", "-");
+        this.type = type.replace(":", "-");
         this.attribute = attribute;
     }
 
 
-    public String getParent() {
+    public OperationTuple getParent() {
         return parent;
     }
 
-    public void setParent(String parent) {
-        this.parent = firstLetterLowerCase(parent);
+    public void setParent(OperationTuple parent) {
+        this.parent = parent;
     }
 
-    private String firstLetterLowerCase(String string){
-        char c[] = string.toCharArray();
-        c[0] = Character.toLowerCase(c[0]);
-        String result = new String(c);
-        return result;
+    public void setName(String name) {
+        this.name = name;
     }
 }

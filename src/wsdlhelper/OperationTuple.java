@@ -10,6 +10,10 @@ public class OperationTuple {
         return name;
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
+
     public String getInput() {
         return input;
     }
@@ -23,19 +27,9 @@ public class OperationTuple {
     }
 
     public OperationTuple(String name, String input, String output, String fault){
-        this.name =  firstLetterLowerCase(name);
-        this.input =  firstLetterLowerCase(input);
-        this.output =  firstLetterLowerCase(output);
-        this.fault =  firstLetterLowerCase(fault);
-    }
-
-    private String firstLetterLowerCase(String string){
-        if(string == null){
-            return string;
-        }
-        char c[] = string.toCharArray();
-        c[0] = Character.toLowerCase(c[0]);
-        String result = new String(c);
-        return result;
+        this.name =  name;
+        this.input = input;
+        this.output = output;
+        this.fault =  fault;
     }
 }
