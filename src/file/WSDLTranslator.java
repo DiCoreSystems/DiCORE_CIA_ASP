@@ -2,6 +2,7 @@ package file;
 
 import wsdlhelper.MessageTuple;
 import wsdlhelper.OperationTuple;
+import wsdlhelper.Service;
 import wsdlhelper.TypeTriple;
 
 import java.io.File;
@@ -25,10 +26,15 @@ public class WSDLTranslator {
         try {
             FileWriter w = new FileWriter(f);
 
-            String service = document.getService();
+            Service service = document.getService();
 
             if(service != null){
-                w.write("service(" + firstLetterLowerCase(service) + ").\n");
+                if(service.getServiceBinding() != null){
+                    w.write("service(" + firstLetterLowerCase(service.getServiceName()) +
+                            ", " + firstLetterLowerCase(service.getServiceBinding()) + ").\n");
+                } else {
+                    w.write("service(" + firstLetterLowerCase(service.getServiceName()) + ").\n");
+                }
             }
 
             for(String binding: document.getBindings()){

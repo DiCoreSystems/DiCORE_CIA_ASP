@@ -26,10 +26,17 @@ public class OperationTuple {
         return fault;
     }
 
+    public OperationTuple(String name, String input, String output){
+        this.name =  name.replace(":", "_");
+        this.input = input.replace(":", "_");
+        this.output = output.replace(":", "_");
+        this.fault = null;
+    }
+
     public OperationTuple(String name, String input, String output, String fault){
-        this.name =  name;
-        this.input = input;
-        this.output = output;
-        this.fault =  fault;
+        this.name =  name.replace(":", "_");
+        this.input = input.replace(":", "_");
+        this.output = output.replace(":", "_");
+        this.fault =  fault.replace(":", "_");
     }
 }

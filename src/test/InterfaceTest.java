@@ -29,7 +29,7 @@ public class InterfaceTest {
         WSDLParser parser = new WSDLParser();
         File f = null;
         try {
-            parser.parse(document);
+            parser.parse(document, true);
 
             assertEquals(2, document.getMessages().size());
             assertEquals(1, document.getOperations().size());
@@ -55,7 +55,7 @@ public class InterfaceTest {
         WSDLDocument document = new WSDLDocument(configPath + "/sample2.wsdl");
         WSDLParser parser = new WSDLParser();
         try {
-            parser.parse(document);
+            parser.parse(document, true);
 
             assertEquals(document.getMessages().size(), 2);
             assertEquals(document.getOperations().size(), 1);
@@ -76,7 +76,7 @@ public class InterfaceTest {
         WSDLDocument document = new WSDLDocument(configPath + "/sample3.wsdl");
         WSDLParser parser = new WSDLParser();
         try {
-            parser.parse(document);
+            parser.parse(document, true);
 
             new WSDLTranslator().translate(document);
         } catch (SAXException e) {

@@ -17,7 +17,7 @@ public class WSDLDocument {
     private ArrayList<OperationTuple> operations = new ArrayList<>();
     private ArrayList<WSDLInterface> interfaces = new ArrayList<>();
     private ArrayList<String> bindings = new ArrayList<>();
-    private String service;
+    private Service service;
 
     public WSDLDocument(String path){
         this.path = new File(path);
@@ -49,6 +49,10 @@ public class WSDLDocument {
         return types;
     }
 
+    public void setTypes(ArrayList<TypeTriple> types) {
+        this.types = types;
+    }
+
     public void addType(TypeTriple type){
         types.add(type);
     }
@@ -59,17 +63,21 @@ public class WSDLDocument {
         return operations;
     }
 
+    public void setOperations(ArrayList<OperationTuple> operations) {
+        this.operations = operations;
+    }
+
     public void addOperation(OperationTuple operation){
         operations.add(operation);
     }
 
     //----------------------------------
 
-    public String getService() {
+    public Service getService() {
         return service;
     }
 
-    public void setService(String service) {
+    public void setService(Service service) {
         this.service = service;
     }
 

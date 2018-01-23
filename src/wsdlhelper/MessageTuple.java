@@ -8,7 +8,7 @@ public class MessageTuple {
 
     public MessageTuple(String messageName, String part){
         this.messageName = messageName;
-        this.part =  part.replace(":", "-");
+        this.part =  part.replace(":", "_");
     }
 
     //----------------------------------

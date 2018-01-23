@@ -3,10 +3,7 @@ package parser;
 import file.WSDLDocument;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-import wsdlhelper.MessageTuple;
-import wsdlhelper.OperationTuple;
-import wsdlhelper.TypeAttribute;
-import wsdlhelper.TypeTriple;
+import wsdlhelper.*;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +18,7 @@ public class WSDLParser {
     Document d;
     HashMap<String, String> documentMap;
 
-    public void parse(WSDLDocument document) throws SAXException, IOException,
+    public void parse(WSDLDocument document, boolean test) throws SAXException, IOException,
             ParserConfigurationException{
 
 
@@ -32,19 +29,37 @@ public class WSDLParser {
 
         //Get all defined namespaces
         NamedNodeMap definitions = docElement.getAttributes();
+        String targetNamespace = "";
+        String definedServiceName = "";
         for(int i = 0; i < definitions.getLength(); i++){
             String nodeName = definitions.item(i).getNodeName();
-            if(nodeName.contains(":")){
-                nodeName = nodeName.substring(nodeName.indexOf(":") + 1);
+
+            switch(nodeName){
+                case "name":
+                    definedServiceName = nodeName;
+                    break;
+                case "targetNamespace":
+                    targetNamespace = replaceSpecialCharacters(nodeName);
+                    break;
+                default:
+                    if(nodeName.contains(":")){
+                        nodeName = nodeName.substring(nodeName.indexOf(":") + 1);
+                    }
+
+                    String nodeValue = definitions.item(i).getNodeValue();
+                    nodeValue = replaceSpecialCharacters(nodeValue);
+
+                    document.getNamespaceMap().put(nodeName, nodeValue);
             }
-
-            String nodeValue = definitions.item(i).getNodeValue();
-            nodeValue = replaceSpecialCharacters(nodeValue);
-
-            document.getNamespaceMap().put(nodeName, nodeValue);
         }
 
         documentMap = document.getNamespaceMap();
+
+        if(documentMap.containsValue(targetNamespace)){
+            targetNamespace = findNamespaceID(targetNamespace);
+            Service definedService = new Service(targetNamespace + definedServiceName, "");
+            document.setService(definedService);
+        }
 
         for (int i = 0; i < docElementChildNodes.getLength(); i++){
             Node item = docElementChildNodes.item(i);
@@ -70,12 +85,16 @@ public class WSDLParser {
 
                                 if(item2.getAttributes().getNamedItem("type") != null){
                                     partType = item2.getAttributes().getNamedItem("type").getNodeValue();
-                                    partType = replaceNamespace(partType);
+                                    if(!test){
+                                        partType = replaceNamespace(partType);
+                                    }
                                 }
 
                                 if(item2.getAttributes().getNamedItem("element") != null){
                                     partElement = item2.getAttributes().getNamedItem("element").getNodeValue();
-                                    partElement = replaceNamespace(partElement);
+                                    if(!test){
+                                        partElement = replaceNamespace(partElement);
+                                    }
                                 }
 
                                 MessageTuple message;
@@ -97,6 +116,10 @@ public class WSDLParser {
                     Node schema = item.getChildNodes().item(1);
                     String namespace = schema.getAttributes().getNamedItem("targetNamespace").getNodeValue();
                     namespace = replaceSpecialCharacters(namespace);
+
+                    if(test){
+                        namespace = findNamespaceID(namespace);
+                    }
 
                     for(int j = 0; j < docElement.getElementsByTagName("complexType").getLength(); j++){
                         Node item2 = docElement.getElementsByTagName("complexType").item(j);
@@ -124,10 +147,10 @@ public class WSDLParser {
                             elementType = complexTypeElement.getAttributes().getNamedItem("type").getNodeValue();
                         }
 
-                        TypeTriple parent = new TypeTriple(namespace + "*" + parentName,
-                                namespace + "*" + elementName, TypeAttribute.NORMAL);
-                        TypeTriple child = new TypeTriple(namespace + "*" + elementName,
-                                namespace + "*" + elementType, TypeAttribute.NORMAL);
+                        TypeTriple parent = new TypeTriple(namespace + "_" + parentName,
+                                namespace + "_" + elementName, TypeAttribute.NORMAL);
+                        TypeTriple child = new TypeTriple(namespace + "_" + elementName,
+                                namespace + "_" + elementType, TypeAttribute.NORMAL);
 
                         document.addType(parent);
                         document.addType(child);
@@ -158,7 +181,9 @@ public class WSDLParser {
                                 if(item3.getNodeName().equals("input")){
                                     if(item3.hasAttributes()) {
                                         String inputName = item3.getAttributes().getNamedItem("message").getNodeValue();
-                                        inputName = replaceNamespace(inputName);
+                                        if(!test){
+                                            inputName = replaceNamespace(inputName);
+                                        }
                                         input = new TypeTriple(inputName, inputName, TypeAttribute.INPUT);
                                         document.addType(input);
                                     }
@@ -167,15 +192,22 @@ public class WSDLParser {
                                 if(item3.getNodeName().equals("output")){
                                     if(item3.hasAttributes()) {
                                         String outputName = item3.getAttributes().getNamedItem("message").getNodeValue();
-                                        outputName = replaceNamespace(outputName);
+                                        if(!test){
+                                            outputName = replaceNamespace(outputName);
+                                        }
                                         output = new TypeTriple(outputName, outputName, TypeAttribute.OUTPUT);
                                         document.addType(output);
                                     }
                                 }
                             }
 
-                            OperationTuple operation = new OperationTuple(op_name, input.getName(),
-                                    output.getName(), fault.getName());
+                            OperationTuple operation;
+                            if(fault.getName() != null){
+                                operation = new OperationTuple(op_name, input.getName(),
+                                        output.getName(), fault.getName());
+                            } else {
+                                operation = new OperationTuple(op_name, input.getName(), output.getName());
+                            }
                             input.setParent(operation);
                             output.setParent(operation);
                             document.addOperation(operation);
@@ -200,8 +232,10 @@ public class WSDLParser {
                             // Find the operation that belong to this binding and add the namespace to it.
                             for(OperationTuple o: operations){
                                 if(o.getName().equals(operationName)){
-                                    String newOperationName = bindingType + ":" + operationName;
-                                    newOperationName = replaceNamespace(newOperationName);
+                                    String newOperationName = bindingType + "_" + operationName;
+                                    if(!test){
+                                        newOperationName = replaceNamespace(newOperationName);
+                                    }
                                     o.setName(newOperationName);
 
                                 }
@@ -211,16 +245,21 @@ public class WSDLParser {
                     break;
 
                 case "service":
-                    String service = item.getAttributes().getNamedItem("name").getNodeValue();
-                    document.setService(service);
+                    String serviceName = item.getAttributes().getNamedItem("name").getNodeValue();
 
+                    // Get the binding attached to the service.
                     for (int j = 0; j < item.getChildNodes().getLength(); j++){
                         Node item2 = item.getChildNodes().item(j);
 
                         if(item2.getNodeName().equals("port")){
                             String serviceBinding = item2.getAttributes().getNamedItem("binding").getNodeValue();
-                            serviceBinding = replaceNamespace(serviceBinding);
-                            document.addBinding(serviceBinding);
+                            if(!test){
+                                serviceBinding = replaceNamespace(serviceBinding);
+                            }
+                            document.addBinding(serviceBinding.replace(":", "_"));
+
+                            Service service = new Service(serviceName, serviceBinding);
+                            document.setService(service);
                         }
                     }
                     break;
@@ -255,7 +294,7 @@ public class WSDLParser {
 
         while (m.find()) {
             short asciiIndex = (short) m.group().charAt(0);
-            result = result.replace(m.group(), "*" + Short.toString(asciiIndex) + "*");
+            result = result.replace(m.group(), "_" + Short.toString(asciiIndex) + "_");
         }
 
         return result;
@@ -266,8 +305,8 @@ public class WSDLParser {
         if(variable.contains(":")){
             String namespace = variable.substring(0, variable.indexOf(":"));
             variable = variable.substring(variable.indexOf(":") + 1);
-            namespace = findNameSpaceID(namespace);
-            variable = namespace + "-" + variable;
+            namespace = findNamespaceValue(namespace);
+            variable = namespace + "_" + variable;
         }
 
         return variable;
@@ -282,8 +321,23 @@ public class WSDLParser {
         }
     }
 
-    public String findNameSpaceID(String identifier){
+    public String findNamespaceValue(String identifier){
         String namespace = documentMap.get(identifier);
         return namespace;
+    }
+
+    /**
+     *
+     * @param namespace - The URL of our namespace.
+     * @return Map Key
+     */
+
+    public String findNamespaceID(String namespace){
+        for (String key: documentMap.keySet()){
+            if(documentMap.get(key).equals(namespace)){
+                return key;
+            }
+        }
+        return "";
     }
 }

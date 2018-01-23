@@ -1,12 +1,12 @@
-service(stockQuoteService).
+service(stockQuoteService, tns_StockQuoteBinding).
 binding(stockQuoteSoapBinding).
-binding(http*58**47**47*example*46*com*47*stockquote*46*wsdl*StockQuoteBinding).
-operation(http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePrice, http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePriceInput, http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePriceOutput).
-type(http*58**47**47*example*46*com*47*stockquote*46*xsd*TradePriceRequest, http*58**47**47*example*46*com*47*stockquote*46*xsd*tickerSymbol).
-type(http*58**47**47*example*46*com*47*stockquote*46*xsd*tickerSymbol, http*58**47**47*example*46*com*47*stockquote*46*xsd*string).
-type(http*58**47**47*example*46*com*47*stockquote*46*xsd*TradePrice, http*58**47**47*example*46*com*47*stockquote*46*xsd*price).
-type(http*58**47**47*example*46*com*47*stockquote*46*xsd*price, http*58**47**47*example*46*com*47*stockquote*46*xsd*float).
-input(http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePrice, http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePriceInput, http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePriceInput).
-output(http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePrice, http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePriceOutput, http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePriceOutput).
-messagePart(http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePriceInput, http*58**47**47*example*46*com*47*stockquote*46*xsd*TradePriceRequest).
-messagePart(http*58**47**47*example*46*com*47*stockquote*46*wsdl*GetLastTradePriceOutput, http*58**47**47*example*46*com*47*stockquote*46*xsd*TradePrice).
+binding(tns_StockQuoteBinding).
+operation(tns_GetLastTradePrice, tns_GetLastTradePriceInput, tns_GetLastTradePriceOutput).
+type(xsd1_TradePriceRequest, xsd1_tickerSymbol).
+type(xsd1_tickerSymbol, xsd1_string).
+type(xsd1_TradePrice, xsd1_price).
+type(xsd1_price, xsd1_float).
+input(tns_GetLastTradePrice, tns_GetLastTradePriceInput, tns_GetLastTradePriceInput).
+output(tns_GetLastTradePrice, tns_GetLastTradePriceOutput, tns_GetLastTradePriceOutput).
+messagePart(tns_GetLastTradePriceInput, xsd1_TradePriceRequest).
+messagePart(tns_GetLastTradePriceOutput, xsd1_TradePrice).
