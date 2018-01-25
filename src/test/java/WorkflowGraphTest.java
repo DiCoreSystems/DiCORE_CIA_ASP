@@ -1,5 +1,3 @@
-package test;
-
 import file.VersionManager;
 import graph.Edge;
 import graph.Graph;
@@ -150,6 +148,9 @@ public class WorkflowGraphTest {
         for (State s: t.getStates()){
             assertEquals(7, s.getFluents().size());
         }
+
+        ClingoRunner clingo = new ClingoRunner();
+        clingo.checkIfSatisfiable(aspCode, true);
     }
 
     @Test
@@ -177,7 +178,7 @@ public class WorkflowGraphTest {
         f = new File(testFilePath);
 
         ClingoRunner parser = new ClingoRunner();
-        assertTrue(parser.checkIfSatisfiable(f, true));
+        parser.checkIfSatisfiable(f, true);
 
         parser.getDifferences(f, true);
     }

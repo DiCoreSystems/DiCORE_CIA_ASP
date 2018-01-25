@@ -1,5 +1,3 @@
-package test;
-
 import file.WSDLTranslator;
 import parser.ClingoRunner;
 import parser.WSDLParser;
@@ -47,7 +45,7 @@ public class InterfaceTest {
         assertNotNull(f);
 
         ClingoRunner clingo = new ClingoRunner();
-        assertTrue(clingo.checkIfSatisfiable(f, false));
+        clingo.checkIfSatisfiable(f, false);
     }
 
     @Test
