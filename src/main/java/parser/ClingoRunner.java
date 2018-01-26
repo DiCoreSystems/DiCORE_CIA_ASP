@@ -16,7 +16,6 @@ public class ClingoRunner {
     // all changes will be discarded and all changes are undone.
 
     private final String configPath = System.getProperty("user.dir") + "/logic_programs";
-    private File domainsFile = new File(configPath + "/domains.lp");
     private File workflowDiffFile = new File(configPath + "/Workflow/diff.lp");
     private File currentFile = new File(configPath + "/current.lp");
     private File interfaceDefaultFile = new File(configPath + "/Interface/default.lp");
@@ -26,7 +25,7 @@ public class ClingoRunner {
         Clingo.init("../clingo4j/src/main/clingo");
 
         try (Clingo control = Clingo.create()) {
-            System.out.println(control.getVersion());
+            System.out.println("Clingo Ver. " + control.getVersion());
             control.add("base", extractLogicProgram(targetFile));
 
             if(!workflow){
@@ -49,40 +48,7 @@ public class ClingoRunner {
     }
 
     public void getDifferences(File targetFile, boolean workflow){
-        if(System.getProperty("os.name").startsWith("Windows")){
-            if(workflow) {
-                workflowDiffFile = new File("\"" + configPath + "/Workflow/diff.lp\"");
-            } else {
-                interfaceDiffFile = new File("\"" + configPath + "/Interface/diff.lp\"");
-            }
-        }
-
-        Clingo.init("../clingo4j/src/main/clingo");
-
-        try (Clingo control = Clingo.create()) {
-            System.out.println(control.getVersion());
-            control.add("base", extractLogicProgram(targetFile));
-
-            if(!workflow){
-                control.add("base", extractLogicProgram(interfaceDefaultFile));
-                control.add("base", extractLogicProgram(interfaceDiffFile));
-            } else {
-                control.add("base", extractLogicProgram(workflowDiffFile));
-            }
-
-            control.ground("base");
-
-            try (SolveHandle handle = control.solve()) {
-                for (Model model : handle)  {
-                    System.out.println("Model type: " + model.getType());
-                    for (Symbol atom : model.getSymbols()) {
-                        System.out.println(atom);
-                    }
-                }
-            }
-        } catch (ClingoException ex) {
-            System.err.println(ex.getMessage());
-        }
+        getDifferences(targetFile, currentFile, workflow);
     }
 
     private String extractLogicProgram(File file){
@@ -105,5 +71,42 @@ public class ClingoRunner {
             e.printStackTrace();
         }
         return stringBuilder.toString();
+    }
+
+    /**
+     * In order for this to work properly, one of these files should be created with a prefix and one without.
+     * @param file1
+     * @param file2
+     * @param workflow True if you're running a workflow file, false otherwise.
+     */
+
+    public void getDifferences(File file1, File file2, boolean workflow) {
+        Clingo.init("../clingo4j/src/main/clingo");
+
+        try (Clingo control = Clingo.create()) {
+            System.out.println("Clingo Ver. " + control.getVersion());
+            control.add("base", extractLogicProgram(file1));
+            control.add("base", extractLogicProgram(file2));
+
+            if(!workflow){
+                control.add("base", extractLogicProgram(interfaceDefaultFile));
+                control.add("base", extractLogicProgram(interfaceDiffFile));
+            } else {
+                control.add("base", extractLogicProgram(workflowDiffFile));
+            }
+
+            control.ground("base");
+
+            try (SolveHandle handle = control.solve()) {
+                for (Model model : handle)  {
+                    System.out.println("Model type: " + model.getType());
+                    for (Symbol atom : model.getSymbols()) {
+                        System.out.println(atom);
+                    }
+                }
+            }
+        } catch (ClingoException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 }
