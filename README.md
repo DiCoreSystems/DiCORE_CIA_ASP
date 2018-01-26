@@ -1,1 +1,1 @@
-# DiCORE_CIA_ASP
+# DiCORE-CIA-ASP (Answer Set Programming)
