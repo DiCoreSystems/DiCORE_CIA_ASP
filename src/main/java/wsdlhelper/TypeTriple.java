@@ -1,7 +1,7 @@
 package wsdlhelper;
 
 public class TypeTriple {
-    private String parent;
+    private OperationTuple parent;
     private String name;
     private String type;
     private TypeAttribute attribute;
@@ -26,17 +26,21 @@ public class TypeTriple {
     }
 
     public TypeTriple(String name, String type, TypeAttribute attribute){
-        this.name = name;
-        this.type = type;
+        this.name = name.replace(":", "_");
+        this.type = type.replace(":", "_");
         this.attribute = attribute;
     }
 
 
-    public String getParent() {
+    public OperationTuple getParent() {
         return parent;
     }
 
-    public void setParent(String parent) {
+    public void setParent(OperationTuple parent) {
         this.parent = parent;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

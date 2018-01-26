@@ -1,7 +1,5 @@
-package test;
-
 import file.WSDLTranslator;
-import parser.ClingoParser;
+import parser.ClingoRunner;
 import parser.WSDLParser;
 import file.WSDLDocument;
 import org.junit.Test;
@@ -21,7 +19,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class InterfaceTest {
 
-    String configPath = Paths.get("text").normalize().toString();
+    private final String configPath = System.getProperty("user.dir") + "\\text";
 
     @Test
     public void Sample1Test(){
@@ -29,11 +27,11 @@ public class InterfaceTest {
         WSDLParser parser = new WSDLParser();
         File f = null;
         try {
-            parser.parse(document);
+            parser.parse(document, true);
 
-            assertEquals(document.getMessages().size(), 2);
-            assertEquals(document.getOperations().size(), 1);
-            assertEquals(document.getTypes().size(),6);
+            assertEquals(2, document.getMessages().size());
+            assertEquals(1, document.getOperations().size());
+            assertEquals(6, document.getTypes().size());
 
             f = new WSDLTranslator().translate(document);
         } catch (SAXException e) {
@@ -46,8 +44,8 @@ public class InterfaceTest {
 
         assertNotNull(f);
 
-        ClingoParser clingo = new ClingoParser();
-        assertTrue(clingo.checkIfSatisfiable(f, false));
+        ClingoRunner clingo = new ClingoRunner();
+        clingo.checkIfSatisfiable(f, false);
     }
 
     @Test
@@ -55,7 +53,7 @@ public class InterfaceTest {
         WSDLDocument document = new WSDLDocument(configPath + "/sample2.wsdl");
         WSDLParser parser = new WSDLParser();
         try {
-            parser.parse(document);
+            parser.parse(document, true);
 
             assertEquals(document.getMessages().size(), 2);
             assertEquals(document.getOperations().size(), 1);
@@ -69,5 +67,33 @@ public class InterfaceTest {
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void Sample3Test(){
+        WSDLDocument document = new WSDLDocument(configPath + "/sample3.wsdl");
+        WSDLParser parser = new WSDLParser();
+        try {
+            parser.parse(document, true);
+
+            new WSDLTranslator().translate(document);
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testCharacterReplacement(){
+        String namespace = "http://example.com/stockquote.wsdl";
+        String expectedResult = "http*58**47**47*example*46*com*47*stockquote*46*wsdl";
+
+        WSDLParser parser = new WSDLParser();
+        String result = parser.replaceSpecialCharacters(namespace);
+
+        assertEquals("", expectedResult, result);
     }
 }

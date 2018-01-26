@@ -89,6 +89,9 @@ _n_action(dopolMap).
 _n_action(doextractRelevantData).
 -_n_occurs(doextractRelevantData,I) :- not _n_occurs(doextractRelevantData,I), step(I).
 
+_n_action(doextractRelevantData).
+-_n_occurs(doextractRelevantData,I) :- not _n_occurs(doextractRelevantData,I), step(I).
+
 _n_action(doshowData).
 -_n_occurs(doshowData,I) :- not _n_occurs(doshowData,I), step(I).
 
@@ -136,6 +139,11 @@ _n_occurs(dopolMap,3).
 
 _n_holds(extractRelevantData,T+1) :- 
            _n_holds(geoMap,T),
+          -_n_holds(extractRelevantData,T),
+           _n_occurs(doextractRelevantData,T).
+
+_n_holds(extractRelevantData,T+1) :- 
+           _n_holds(polMap,T),
           -_n_holds(extractRelevantData,T),
            _n_occurs(doextractRelevantData,T).
 

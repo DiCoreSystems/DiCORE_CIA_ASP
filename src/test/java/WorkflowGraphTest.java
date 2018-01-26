@@ -1,18 +1,14 @@
-package test;
-
 import file.VersionManager;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 import graph.WorkflowGraph;
 import org.junit.Test;
-import parser.ClingoParser;
+import parser.ClingoRunner;
 import transDiagram.State;
 import transDiagram.TransitionDiagram;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -24,21 +20,8 @@ import static org.junit.Assert.*;
 public class WorkflowGraphTest {
 
     private Graph graph;
-    private final String configPath = getConfigPath();
-    private final String testFilePath = "\"" + configPath + "/test/testNew.lp\"";
-
-    private String getConfigPath() {
-        FileReader fr;
-        File configFile = new File("config");
-        try {
-            fr = new FileReader(configFile);
-            BufferedReader r = new BufferedReader(fr);
-            return r.readLine();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    private final String configPath = System.getProperty("user.dir") + "\\logic_programs";
+    private final String testFilePath = configPath + "/test/testNew.lp";
 
 
     public void Graph1SetUp(){
@@ -156,15 +139,18 @@ public class WorkflowGraphTest {
 
         TransitionDiagram t = workflowGraph.translate();
 
-        t.createASPCode();
+        File aspCode = t.createASPCode();
 
         assertEquals(7, t.getStates().size());
-        assertEquals(7, t.getActions().size());
+        assertEquals(8, t.getActions().size());
         assertEquals(7, t.getFluents().size());
 
         for (State s: t.getStates()){
             assertEquals(7, s.getFluents().size());
         }
+
+        ClingoRunner clingo = new ClingoRunner();
+        clingo.checkIfSatisfiable(aspCode, true);
     }
 
     @Test
@@ -178,7 +164,7 @@ public class WorkflowGraphTest {
         t.createASPCode();
 
         assertEquals(7, t.getStates().size());
-        assertEquals(7, t.getActions().size());
+        assertEquals(8, t.getActions().size());
         assertEquals(7, t.getFluents().size());
 
         for (State s: t.getStates()){
@@ -191,9 +177,8 @@ public class WorkflowGraphTest {
         File f;
         f = new File(testFilePath);
 
-        ClingoParser parser = new ClingoParser();
-        assertNotNull(f);
-        assertTrue(parser.checkIfSatisfiable(f, true));
+        ClingoRunner parser = new ClingoRunner();
+        parser.checkIfSatisfiable(f, true);
 
         parser.getDifferences(f, true);
     }
