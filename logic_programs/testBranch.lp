@@ -147,6 +147,9 @@ _n_action(do8).
 _n_action(do8).
 -_n_occurs(do8,I) :- not _n_occurs(do8,I), step(I).
 
+_n_action(do8).
+-_n_occurs(do8,I) :- not _n_occurs(do8,I), step(I).
+
 -_n_holds(1,0).
 -_n_holds(2,0).
 -_n_holds(3,0).
@@ -235,6 +238,11 @@ _n_holds(8,T+1) :-
 
 _n_holds(8,T+1) :- 
            _n_holds(7,T),
+          -_n_holds(8,T),
+           _n_occurs(do8,T).
+
+_n_holds(8,T+1) :- 
+           _n_holds(b3,T),
           -_n_holds(8,T),
            _n_occurs(do8,T).
 

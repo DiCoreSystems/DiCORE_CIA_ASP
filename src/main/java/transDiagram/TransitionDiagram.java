@@ -3,6 +3,7 @@ package transDiagram;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Jan Brümmer on 10.06.2017.
@@ -10,11 +11,21 @@ import java.util.List;
  * now directly translated to ASP code.
  */
 public class TransitionDiagram {
+    private final String DEFAULT_FILE_PATH = "../ASP/logic_programs/new.lp";
     private final List<Fluent> fluents;
     private final List<Action> actions;
     private final List<State> states;
     private final List<State> startingStates;
     private File f;
+    private String prefix = "_n_";
+    private String constant = randomChar();
+
+    private String randomChar() {
+        // TODO: BAD!! VERY BAD!!!
+        int rand = 97 + (int)(Math.random() * ((122 - 97) + 1));
+        char result = (char) rand;
+        return Character.toString(result);
+    }
 
     public TransitionDiagram(List<Fluent> fluents, List<Action> actions, List<State> states,
                                 List<State> startingStates) {
@@ -24,9 +35,8 @@ public class TransitionDiagram {
         this.startingStates = startingStates;
     }
 
-    public File createASPCode(){
-
-        f = new File("../ASP/logic_programs/new.lp");
+    public void setFilePath(String filePath){
+        f = new File(filePath);
 
         if(!(f.exists() && !f.isDirectory())){
             try {
@@ -34,6 +44,14 @@ public class TransitionDiagram {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public File createASPCode(){
+        System.out.println(constant);
+
+        if(f == null){
+            setFilePath(DEFAULT_FILE_PATH);
         }
 
         try {
@@ -43,8 +61,8 @@ public class TransitionDiagram {
             // But it is necessary to check if a fluent is really inertial or not.
 
             int n = this.getStates().size();
-            w.write("#const n = " + n + ".\n");
-            w.write("step(0..n).\n");
+            w.write("#const " + constant + " = " + n + ".\n");
+            w.write("step(0.." + constant + ").\n");
 
             w.write("\n");
 
@@ -52,24 +70,24 @@ public class TransitionDiagram {
                 String name = fluent.getName();
 
                 if(fluent.isInertial()){
-                    w.write("_n_fluent(inertial, " + name + ").\n");
+                    w.write(prefix + "fluent(inertial, " + name + ").\n");
 
                     // INERTIA AXIOM FOR FLUENTS
-                    w.write("_n_holds(" + name + ",I+1) :- \n" +
-                            "           _n_fluent(inertial, " + name + "), \n" +
-                            "           _n_holds(" + name + ",I),\n" +
-                            "           not -_n_holds(" + name + ",I+1), step(I).\n");
+                    w.write(prefix + "holds(" + name + ",I+1) :- \n" +
+                            "           " + prefix + "fluent(inertial, " + name + "), \n" +
+                            "           " + prefix + "holds(" + name + ",I),\n" +
+                            "           not -" + prefix + "holds(" + name + ",I+1), step(I).\n");
 
-                    w.write("-_n_holds(" + name + ",I+1) :- \n" +
-                            "           _n_fluent(inertial, " + name + "), \n" +
-                            "           -_n_holds(" + name + ",I),\n" +
-                            "           not _n_holds(" + name + ",I+1), step(I).\n");
+                    w.write("-" + prefix + "holds(" + name + ",I+1) :- \n" +
+                            "           " + prefix + "fluent(inertial, " + name + "), \n" +
+                            "           -" + prefix + "holds(" + name + ",I),\n" +
+                            "           not " + prefix + "holds(" + name + ",I+1), step(I).\n");
                 } else {
-                    w.write("_n_fluent(defined" + name + ").\n");
+                    w.write("" + prefix + "fluent(defined" + name + ").\n");
 
                     // CWA FOR FLUENTS
-                    w.write("-_n_holds(" + name + ",I+1) :- \n" +
-                            "           _n_fluent(defined" + name + "), \n" +
+                    w.write("-" + prefix + "holds(" + name + ",I+1) :- \n" +
+                            "           " + prefix + "fluent(defined" + name + "), \n" +
                             "           not holds(" + name + ",I), step(I).\n");
                 }
 
@@ -80,11 +98,11 @@ public class TransitionDiagram {
 
             // DEFINITION OF ACTIONS.
             for(Action a: actions){
-                w.write("_n_action(" + a.getName() +").\n");
+                w.write("" + prefix + "action(" + a.getName() +").\n");
 
                 // CWA FOR ACTIONS
-                w.write("-_n_occurs(" + a.getName() +",I) :-" +
-                        " not _n_occurs(" + a.getName() + ",I), step(I).\n");
+                w.write("-" + prefix + "occurs(" + a.getName() +",I) :-" +
+                        " not " + prefix + "occurs(" + a.getName() + ",I), step(I).\n");
 
                 w.write("\n");
             }
@@ -94,9 +112,9 @@ public class TransitionDiagram {
             for(State start: startingStates){
                 for(Fluent fluent: start.getFluents()) {
                     if(fluent.getValue()){
-                        w.write("_n_holds(" + fluent.getName() + ",0).\n");
+                        w.write("" + prefix + "holds(" + fluent.getName() + ",0).\n");
                     } else {
-                        w.write("-_n_holds(" + fluent.getName() + ",0).\n");
+                        w.write("-" + prefix + "holds(" + fluent.getName() + ",0).\n");
                     }
                 }
             }
@@ -127,20 +145,20 @@ public class TransitionDiagram {
 
                     // Standard ASP Codeblock for each predecessor (causal law).
                     if(state.getIngoingActions().isEmpty()){
-                        w.write("_n_holds(" + state.getName() + ",T+1) :- \n");
-                        w.write("           _n_occurs(do" + state.getName() + ", T).\n\n");
+                        w.write("" + prefix + "holds(" + state.getName() + ",T+1) :- \n");
+                        w.write("           " + prefix + "occurs(do" + state.getName() + ", T).\n\n");
                     } else {
                         for(Action predecessorAction: state.getIngoingActions()){
-                            w.write("_n_holds(" + state.getName() + ",T+1) :- \n");
+                            w.write("" + prefix + "holds(" + state.getName() + ",T+1) :- \n");
 
                             // The state "start" is merely used as an orientation where the workflow starts.
                             // It has no further impact on the workflow.
                             if(!predecessorAction.getStartState().getName().equals("start")){
-                                w.write("           _n_holds(" + predecessorAction.getStartState().getName() + ",T),\n");
+                                w.write("           " + prefix + "holds(" + predecessorAction.getStartState().getName() + ",T),\n");
                             }
 
-                            w.write("          -_n_holds(" + state.getName() + ",T),\n");
-                            w.write("           _n_occurs(do" + state.getName() + ",T).\n\n");
+                            w.write("          -" + prefix + "holds(" + state.getName() + ",T),\n");
+                            w.write("           " + prefix + "occurs(do" + state.getName() + ",T).\n\n");
                         }
                     }
 
@@ -150,7 +168,7 @@ public class TransitionDiagram {
 
                     visitedStates.add(state);
 
-                    w.write("_n_occurs(do" + state.getName() + "," + i + ").\n\n");
+                    w.write("" + prefix + "occurs(do" + state.getName() + "," + i + ").\n\n");
                 }
 
                 // If nextVisit is empty
@@ -183,5 +201,10 @@ public class TransitionDiagram {
 
     public List<Fluent> getFluents() {
         return fluents;
+    }
+
+    public File createASPCodeWithoutPrefix() {
+        this.prefix = "";
+        return createASPCode();
     }
 }
